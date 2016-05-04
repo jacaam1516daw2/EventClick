@@ -1,0 +1,39 @@
+extends layout
+
+block content
+    .container#init
+      .jumbotron
+        h1 Bienvenido a #{title}
+        p Estos son los eventos activos que existen actualmente:
+        button#add-new.btn.btn-info(type='button') Nuevo Evento
+      .row
+        .col-sm-4
+          h3 Column 1
+          p Lorem ipsum dolor sit amet, consectetur adipisicing elit...
+          p Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...
+          button#add-putme.btn.btn-info(type='button') Apúntame
+          &nbsp&nbsp
+          button#add-show.btn.btn-info(type='button') Ver evento
+     .container#alta.col-sm-12
+          #editionPanel
+             h3 Bienvenido a #{title}
+             p Alta de evento
+          br
+          form(role='form')
+          .form-group
+            label() Título
+            input.form-control(type='text', placeholder='Campo de texto')
+          .form-group
+            label() Subtítulo
+            input.form-control(type='text', placeholder='Campo de texto')
+          .form-group
+            label(for='archivo') Adjuntar un archivo
+            input#ejemplo_archivo_1(type='file')
+            p.help-block Ejemplo de texto de ayuda.
+           textarea.form-control(rows='3') Explica en que consiste el evento
+          .checkbox
+            label
+              input(type='checkbox')
+              |  Activar evento
+
+          button.btn.btn-info(type='submit') Enviar
