@@ -24,3 +24,8 @@
 #add-show {
     margin-right: 0%;
 }
+i {
+    content: "\f046";
+    font-size: 18px;
+    color: black;
+}

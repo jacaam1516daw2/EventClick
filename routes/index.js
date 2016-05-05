@@ -16,16 +16,17 @@ router.get('/', function (req, res, next) {
         assert.equal(null, err);
         console.log("Connexió correcta");
         listaEventClick = [];
-        activeEvents(db, err, function () {});
+        activeEvents(db, err, function () {
+            res.render('index', {
+                title: 'EventClick',
+                listaEventClick: listaEventClick
+            });
+        });
     });
-    res.render('index', {
-        title: 'EventClick',
-        listaEventClick: listaEventClick
-    });
+
 });
 
 router.post('/newEvent', function (req, res) {
-    console.log('newEvent');
     eventClick = new Object();
     eventClick.title = req.body.titleForm;
     eventClick.subtitle = req.body.subtitleForm;
@@ -40,11 +41,12 @@ router.post('/newEvent', function (req, res) {
         console.log("Connexió correcta");
         saveEvents(db, err, function () {});
         listaEventClick = [];
-        activeEvents(db, err, function () {});
-    });
-    res.render('index', {
-        title: 'EventClick',
-        listaEventClick: listaEventClick
+        activeEvents(db, err, function () {
+            res.render('index', {
+                title: 'EventClick',
+                listaEventClick: listaEventClick
+            });
+        });
     });
 });
 
@@ -53,14 +55,13 @@ router.post('/newEvent', function (req, res) {
  */
 
 var activeEvents = function (db, err, callback) {
-    console.log('activeEvents');
     var cursor = db.collection('events').find({
         "isActive": 'on'
     });
     cursor.each(function (err, doc) {
         assert.equal(err, null);
-        eventClick = new Object();
         if (doc != null) {
+            eventClick = new Object();
             eventClick.idEvent = doc._id;
             eventClick.title = doc.title;
             eventClick.subtitle = doc.subtitle;
@@ -69,7 +70,7 @@ var activeEvents = function (db, err, callback) {
             eventClick.isActive = doc.isActive;
             eventClick.initDate = doc.initDate;
             eventClick.endDate = doc.endDate;
-            console.log('eventClick: ' + eventClick.title);
+
             listaEventClick.push(eventClick);
         } else {
             callback();
@@ -79,7 +80,6 @@ var activeEvents = function (db, err, callback) {
 };
 
 var saveEvents = function (db, err, callback) {
-    console.log('saveEvents');
     db.collection('events').insertOne({
         "title": eventClick.title,
         "subtitle": eventClick.subtitle,
