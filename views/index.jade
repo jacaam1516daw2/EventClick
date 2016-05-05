@@ -4,15 +4,19 @@ block content
     .container#init
       .jumbotron
         h1 Bienvenido a #{title}
-        p Estos son los eventos activos que existen actualmente:
+        p Crea y gestiona tus eventos
         button#add-new.btn.btn-info(type='button') Nuevo Evento
       .row
-        .col-sm-4
-          h3 Column 1
-          p Lorem ipsum dolor sit amet, consectetur adipisicing elit...
-          p Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...
-          button#add-putme.btn.btn-info.col-sm-4(type='button') Apúntame
-          button#add-show.btn.btn-info.col-sm-4(type='button') Ver evento
+        h1 Eventos
+        ul#listaEventClick
+          each eventClick in listaEventClick
+           .ev.col-sm-4
+               h2= eventClick.title
+               h3= eventClick.subtitle
+               p= eventClick.description
+               p= eventClick.endDate
+               button#add-putme.btn.btn-info.col-sm-4(type='button') Apúntame
+               button#add-show.btn.btn-info.col-sm-4(type='button') Ver evento
      .container#alta
           #editionPanel.row
              h3 Bienvenido a #{title}

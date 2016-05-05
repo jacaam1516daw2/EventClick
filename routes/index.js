@@ -5,41 +5,28 @@ var assert = require('assert'); //utilitzem assercions
 
 var ObjectId = require('mongodb').ObjectID;
 var url = 'mongodb://localhost:27017/EventClickBD';
-var eventClick = [{
-    title: '',
-    subtitle: '',
-    description: '',
-    author: '',
-    isActive: {
-        type: Boolean
-    },
-    initDate: {
-        type: Date,
-        default: Date.now
-    },
-    endDate: {
-        type: Date
-    }
-}];
 
-var lista = [];
+var eventClick = new Object();
+
+var listaEventClick = [];
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
     MongoClient.connect(url, function (err, db) {
         assert.equal(null, err);
         console.log("Connexió correcta");
-        //activeEvents(db, err, function () {});
+        listaEventClick = [];
+        activeEvents(db, err, function () {});
     });
     res.render('index', {
         title: 'EventClick',
-        eventClick: eventClick
+        listaEventClick: listaEventClick
     });
 });
 
 router.post('/newEvent', function (req, res) {
     console.log('newEvent');
-
+    eventClick = new Object();
     eventClick.title = req.body.titleForm;
     eventClick.subtitle = req.body.subtitleForm;
     eventClick.description = req.body.descriptionForm;
@@ -52,10 +39,12 @@ router.post('/newEvent', function (req, res) {
         assert.equal(null, err);
         console.log("Connexió correcta");
         saveEvents(db, err, function () {});
+        listaEventClick = [];
+        activeEvents(db, err, function () {});
     });
     res.render('index', {
         title: 'EventClick',
-        eventClick: eventClick
+        listaEventClick: listaEventClick
     });
 });
 
@@ -66,16 +55,22 @@ router.post('/newEvent', function (req, res) {
 var activeEvents = function (db, err, callback) {
     console.log('activeEvents');
     var cursor = db.collection('events').find({
-        "active": true
+        "isActive": 'on'
     });
     cursor.each(function (err, doc) {
         assert.equal(err, null);
+        eventClick = new Object();
         if (doc != null) {
+            eventClick.idEvent = doc._id;
             eventClick.title = doc.title;
             eventClick.subtitle = doc.subtitle;
             eventClick.description = doc.description;
-            eventClick.author = doc.author;
-            lista.push(eventClick);
+            //eventClick.author = doc.author;
+            eventClick.isActive = doc.isActive;
+            eventClick.initDate = doc.initDate;
+            eventClick.endDate = doc.endDate;
+            console.log('eventClick: ' + eventClick.title);
+            listaEventClick.push(eventClick);
         } else {
             callback();
         }
