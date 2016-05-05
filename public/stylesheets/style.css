@@ -7,7 +7,20 @@
 .jumbotron {
     text-align: center;
 }
-#alta {}
 .container {
     align-content: center;
+}
+#descript {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+#dateend,
+{
+    padding-left: 10px;
+}
+#add-putme {
+    margin-left: 0%;
+}
+#add-show {
+    margin-right: 0%;
 }

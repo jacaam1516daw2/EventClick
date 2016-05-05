@@ -10,12 +10,16 @@ var eventClick = [{
     subtitle: '',
     description: '',
     author: '',
-    isActive: true,
+    isActive: {
+        type: Boolean
+    },
     initDate: {
         type: Date,
         default: Date.now
     },
-    endDate: ''
+    endDate: {
+        type: Date
+    }
 }];
 
 var lista = [];
@@ -25,7 +29,29 @@ router.get('/', function (req, res, next) {
     MongoClient.connect(url, function (err, db) {
         assert.equal(null, err);
         console.log("Connexió correcta");
-        activeEvents(db, err, function () {});
+        //activeEvents(db, err, function () {});
+    });
+    res.render('index', {
+        title: 'EventClick',
+        eventClick: eventClick
+    });
+});
+
+router.post('/', function (req, res) {
+    console.log('newEvent');
+
+    eventClick.title = req.body.titleForm;
+    eventClick.subtitle = req.body.subtitleForm;
+    eventClick.description = req.body.descriptionForm;
+    //eventClick.author = req.body.author;
+    eventClick.isActive = req.body.isActiveForm;
+    eventClick.initDate = req.body.initDateForm;
+    eventClick.endDate = req.body.endDateForm;
+
+    MongoClient.connect(url, function (err, db) {
+        assert.equal(null, err);
+        console.log("Connexió correcta");
+        saveEvents(db, err, function () {});
     });
     res.render('index', {
         title: 'EventClick',
@@ -55,6 +81,22 @@ var activeEvents = function (db, err, callback) {
         }
 
     });
+};
+
+var saveEvents = function (db, err, callback) {
+    console.log('saveEvents');
+    db.collection('events').insertOne({
+        "title": eventClick.title,
+        "subtitle": eventClick.subtitle,
+        "description": eventClick.description,
+        //"author": author,
+        "isActive": eventClick.isActive,
+        "initDate": eventClick.initDate,
+        "endDate": eventClick.endDate
+    });
+    assert.equal(err, null);
+    console.log("Nuevo evento creado en col·lección de eventos");
+    callback();
 };
 
 module.exports = router;

@@ -11,29 +11,35 @@ block content
           h3 Column 1
           p Lorem ipsum dolor sit amet, consectetur adipisicing elit...
           p Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...
-          button#add-putme.btn.btn-info(type='button') Apúntame
-          &nbsp&nbsp
-          button#add-show.btn.btn-info(type='button') Ver evento
-     .container#alta.col-sm-12
-          #editionPanel
+          button#add-putme.btn.btn-info.col-sm-4(type='button') Apúntame
+          button#add-show.btn.btn-info.col-sm-4(type='button') Ver evento
+     .container#alta
+          #editionPanel.row
              h3 Bienvenido a #{title}
              p Alta de evento
-          br
-          form(role='form')
-          .form-group
-            label() Título
-            input.form-control(type='text', placeholder='Campo de texto')
-          .form-group
-            label() Subtítulo
-            input.form-control(type='text', placeholder='Campo de texto')
-          .form-group
-            label(for='archivo') Adjuntar un archivo
-            input#ejemplo_archivo_1(type='file')
-            p.help-block Ejemplo de texto de ayuda.
-           textarea.form-control(rows='3') Explica en que consiste el evento
-          .checkbox
-            label
-              input(type='checkbox')
-              |  Activar evento
-
-          button.btn.btn-info(type='submit') Enviar
+          form(role='form', method='POST')
+              .form-group
+                label() Título
+                input#title.form-control(type='text', name='titleForm', placeholder='Campo de texto', value="Título")
+              .form-group
+                label() Subtítulo
+                input#subtitle.form-control(type='text', name='subtitleForm', placeholder='Campo de texto', value="Subtítulo")
+              .row
+                  .form-group.col-sm-4
+                    label(for='archivo') Adjuntar imagen
+                    input#fileImage(type='file', name='fileImageForm')
+                    p.help-block Que no supere los 2 MB
+                  .form-group.col-sm-8
+                    label() Fecha de inicio:
+                    input#initDate.date(type='text', name='initDateForm', placeholder='DD/MM/YYYY', value="13/05/2016")
+                    label()#dateend Fecha final de evento:
+                    input#endDate.date(type='text', name='endDateForm', placeholder='DD/MM/YYYY', value="23/05/2016")
+              .form-group.row#descript
+                label() Explica en que consiste el evento
+                textarea#description.form-control(rows='3', name='descriptionForm')
+              .form-group
+              .checkbox
+                label
+                  input#isActive(type='checkbox', name='isActiveForm')
+                  |  Activar evento
+              input#add-newEvent.btn.btn-info(type='submit', value="Crear")
