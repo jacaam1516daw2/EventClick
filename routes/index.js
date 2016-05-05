@@ -37,7 +37,7 @@ router.get('/', function (req, res, next) {
     });
 });
 
-router.post('/', function (req, res) {
+router.post('/newEvent', function (req, res) {
     console.log('newEvent');
 
     eventClick.title = req.body.titleForm;

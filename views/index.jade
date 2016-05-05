@@ -17,7 +17,7 @@ block content
           #editionPanel.row
              h3 Bienvenido a #{title}
              p Alta de evento
-          form(role='form', method='POST')
+          form(role='form', method='POST' action='/newEvent')
               .form-group
                 label() Título
                 input#title.form-control(type='text', name='titleForm', placeholder='Campo de texto', value="Título")
