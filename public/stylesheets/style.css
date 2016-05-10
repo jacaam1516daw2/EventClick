@@ -35,3 +35,11 @@ i {
     padding: 2%;
     margin: 1% 1%;
 }
+input[type=submit] {
+    margin-right: 5px;
+    float: left;
+}
+#add-new {
+    margin-right: 5px;
+    float: left;
+}

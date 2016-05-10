@@ -45,6 +45,24 @@ router.post('/', function (req, res, next) {
 });
 
 /*
+ * Redirección Botones de Inicio
+ */
+router.post('/allevents', function (req, res, next) {
+    MongoClient.connect(url, function (err, db) {
+        assert.equal(null, err);
+        console.log("Connexió correcta");
+        listaEventClick = [];
+        activeEvents(db, err, function () {
+            res.render('allevents', {
+                title: 'EventClick',
+                listaEventClick: listaEventClick
+            });
+        });
+    });
+
+});
+
+/*
  * Redirección de Inicio a la pantalla de Altas
  */
 router.post('/alta', function (req, res) {

@@ -7,6 +7,8 @@ block content
         p Crea y gestiona tus eventos
         form(role='form', method='POST' action='/alta')
             button#add-new.btn.btn-info(type='submit') Nuevo Evento
+        form(role='form', method='POST' action='/allevents')
+            button#add-allevents.btn.btn-info(type='submit') Ver todos
       .row
         h1 Eventos
         ul#listaEventClick

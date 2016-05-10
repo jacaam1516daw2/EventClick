@@ -1,0 +1,26 @@
+extends layout
+
+block content
+    .container
+         h3 Bienvenido a #{title}
+         p Lista de eventos
+          table.table.table-hover
+            thead
+              tr
+                th Título
+                th Subtítulo
+                th Finaliza
+                th Ver
+            tbody
+                each eventClick in listaEventClick
+                    form(role='form', method='POST' action='/show')
+                      tr
+                        input(type='hidden', name='idEvent', value='#{eventClick.idEvent}')
+                        td #{eventClick.title}
+                        td #{eventClick.subtitle}
+                        td #{eventClick.endDate}
+                        td
+                            button#add-show.btn.btn-info.btn-sm(type='submit', value='')
+                                i.fa.fa-eye
+         form(role='form', method='POST' action='/')
+              input#add-init.btn.btn-info.col-sm-2(type='submit', value="Inicio")
