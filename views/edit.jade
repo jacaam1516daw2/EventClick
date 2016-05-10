@@ -20,16 +20,16 @@ block content
                     p.help-block Que no supere los 2 MB
                   .form-group.col-sm-8
                     label() Fecha de inicio:
-                    input#initDate.date(type='text', name='initDateForm', placeholder='DD/MM/YYYY', value="13/05/2016")
+                    input#initDate.date(type='text', name='initDateForm', placeholder='DD/MM/YYYY', value="#{eventClick.initDate}")
                     label()#dateend Fecha final de evento:
-                    input#endDate.date(type='text', name='endDateForm', placeholder='DD/MM/YYYY', value="23/05/2016")
+                    input#endDate.date(type='text', name='endDateForm', placeholder='DD/MM/YYYY', value="#{eventClick.endDate}")
               .form-group.row#descript
                 label() Explica en que consiste el evento
-                textarea#description.form-control(rows='3', name='descriptionForm')
+                textarea#description.form-control(rows='3', name='descriptionForm') #{eventClick.description}
               .form-group
               .checkbox
                 label
-                  input#isActive(type='checkbox', name='isActiveForm')
+                  input#isActive(type='checkbox', name='isActiveForm', checked="#{eventClick.isActive}")
                   |  Activar evento
               .form-group.col-sm-8
               input#add-edit.btn.btn-info.col-sm-2(type='submit', value="Guardar")

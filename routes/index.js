@@ -64,7 +64,7 @@ router.post('/insert', function (req, res) {
     eventClick.subtitle = req.body.subtitleForm;
     eventClick.description = req.body.descriptionForm;
     //eventClick.author = req.body.author;
-    eventClick.isActive = req.body.isActiveForm;
+    eventClick.isActive = req.body.isActiveForm == 'on' ? 'checked' : '';
     eventClick.initDate = req.body.initDateForm;
     eventClick.endDate = req.body.endDateForm;
 
@@ -109,7 +109,7 @@ router.post('/update', function (req, res) {
     eventClick.subtitle = req.body.subtitleForm;
     eventClick.description = req.body.descriptionForm;
     //eventClick.author = req.body.author;
-    eventClick.isActive = req.body.isActiveForm;
+    eventClick.isActive = req.body.isActiveForm == 'on' ? 'checked' : '';
     eventClick.initDate = req.body.initDateForm;
     eventClick.endDate = req.body.endDateForm;
 
@@ -216,7 +216,7 @@ var eventsById = function (db, err, callback) {
  */
 var activeEvents = function (db, err, callback) {
     var cursor = db.collection('events').find({
-        "isActive": 'on'
+        "isActive": 'checked'
     });
     cursor.each(function (err, doc) {
         assert.equal(err, null);

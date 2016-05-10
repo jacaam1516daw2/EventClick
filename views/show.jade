@@ -28,7 +28,10 @@ block content
         .row
           .form-group.row
             h3 Activo
-            label() #{eventClick.isActive}
+            .checkbox
+                label
+                  input#isActive(type='checkbox', name='isActiveForm', checked="#{eventClick.isActive}", disabled='true')
+                  |  Activar evento
             input#add-edit.btn.btn-info.col-sm-2(type='submit', value="Editar")
       form(role='form', method='POST' action='/')
         input#add-init.btn.btn-info.col-sm-2(type='submit', value="Inicio")
