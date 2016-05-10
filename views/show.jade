@@ -1,0 +1,34 @@
+extends layout
+
+block content
+    .container#show
+      #showPanel.row
+         h3 Bienvenido a #{title}
+         p Evento
+      form(role='form', method='POST' action='/edit')
+        .row
+          .form-group
+            input(type='hidden', name='idEvent', value='#{eventClick.idEvent}')
+            h1 Título
+            label() #{eventClick.title}
+        .row
+          .form-group
+            h3 Subtítulo
+            label() #{eventClick.subtitle}
+        .row
+          .form-group.col-sm-8
+            h3 Fecha de inicio:
+            label() #{eventClick.initDate}
+            h3 Fecha final de evento:
+            label() #{eventClick.endDate}
+        .row
+          .form-group.row#descript
+            h3 Descripción del evento
+            label() #{eventClick.description}
+        .row
+          .form-group.row
+            h3 Activo
+            label() #{eventClick.isActive}
+            input#add-edit.btn.btn-info.col-sm-2(type='submit', value="Editar")
+      form(role='form', method='POST' action='/')
+        input#add-init.btn.btn-info.col-sm-2(type='submit', value="Inicio")

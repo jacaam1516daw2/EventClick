@@ -4,9 +4,6 @@
     background-color: #5BC0DE;
     text-align: center;
 }
-.jumbotron {
-    text-align: center;
-}
 .container {
     align-content: center;
 }
@@ -27,5 +24,14 @@
 i {
     content: "\f046";
     font-size: 18px;
-    color: black;
+    color: white;
+}
+.EventId {
+    display: none;
+}
+.ev {
+    border-radius: 15%;
+    border: 2px solid #ccccff;
+    padding: 2%;
+    margin: 1% 1%;
 }
