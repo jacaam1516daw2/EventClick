@@ -16,7 +16,7 @@ router.get('/', function (req, res, next) {
         assert.equal(null, err);
         console.log("Connexió correcta");
         listaEventClick = [];
-        activeEvents(db, err, function () {
+        topEvents(db, err, function () {
             res.render('index', {
                 title: 'EventClick',
                 listaEventClick: listaEventClick
@@ -34,7 +34,7 @@ router.post('/', function (req, res, next) {
         assert.equal(null, err);
         console.log("Connexió correcta");
         listaEventClick = [];
-        activeEvents(db, err, function () {
+        topEvents(db, err, function () {
             res.render('index', {
                 title: 'EventClick',
                 listaEventClick: listaEventClick
@@ -52,7 +52,7 @@ router.post('/allevents', function (req, res, next) {
         assert.equal(null, err);
         console.log("Connexió correcta");
         listaEventClick = [];
-        activeEvents(db, err, function () {
+        allEvents(db, err, function () {
             res.render('allevents', {
                 title: 'EventClick',
                 listaEventClick: listaEventClick
@@ -82,7 +82,7 @@ router.post('/insert', function (req, res) {
     eventClick.subtitle = req.body.subtitleForm;
     eventClick.description = req.body.descriptionForm;
     //eventClick.author = req.body.author;
-    eventClick.isActive = req.body.isActiveForm == 'on' ? 'checked' : '';
+    eventClick.isActive = req.body.isActiveForm;
     eventClick.initDate = req.body.initDateForm;
     eventClick.endDate = req.body.endDateForm;
 
@@ -127,7 +127,7 @@ router.post('/update', function (req, res) {
     eventClick.subtitle = req.body.subtitleForm;
     eventClick.description = req.body.descriptionForm;
     //eventClick.author = req.body.author;
-    eventClick.isActive = req.body.isActiveForm == 'on' ? 'checked' : '';
+    eventClick.isActive = req.body.isActiveForm;
     eventClick.initDate = req.body.initDateForm;
     eventClick.endDate = req.body.endDateForm;
 
@@ -185,17 +185,17 @@ var saveEvents = function (db, err, callback) {
  * Modificación evento (guardamos por id)
  */
 var editEvents = function (db, err, callback) {
+    console.log("update: " + eventClick.idEvent);
     db.collection('events').updateOne({
-        "title": eventClick.title,
-        "subtitle": eventClick.subtitle,
-        "description": eventClick.description,
-        //"author": author,
-        "isActive": eventClick.isActive,
-        "initDate": eventClick.initDate,
-        "endDate": eventClick.endDate
+        "_id": ObjectId(eventClick.idEvent)
     }, {
         $set: {
-            "_id": ObjectId(eventClick.idEvent)
+            "title": eventClick.title,
+            "subtitle": eventClick.subtitle,
+            "description": eventClick.description,
+            "isActive": eventClick.isActive,
+            "initDate": eventClick.initDate,
+            "endDate": eventClick.endDate
         }
     });
     assert.equal(err, null);
@@ -230,12 +230,98 @@ var eventsById = function (db, err, callback) {
 };
 
 /**
- * Busqueda evento pantalla de inicio (Solo los activos)
+ * Busqueda evento activados
  */
 var activeEvents = function (db, err, callback) {
     var cursor = db.collection('events').find({
         "isActive": 'checked'
     });
+    cursor.each(function (err, doc) {
+        assert.equal(err, null);
+        if (doc != null) {
+            eventClick = new Object();
+            eventClick.idEvent = doc._id;
+            eventClick.title = doc.title;
+            eventClick.subtitle = doc.subtitle;
+            eventClick.description = doc.description;
+            //eventClick.author = doc.author;
+            eventClick.isActive = doc.isActive;
+            eventClick.initDate = doc.initDate;
+            eventClick.endDate = doc.endDate;
+
+            listaEventClick.push(eventClick);
+        } else {
+            callback();
+        }
+
+    });
+};
+
+/**
+ * Busqueda evento desactivados
+ */
+var inactiveEvents = function (db, err, callback) {
+    var cursor = db.collection('events').find({
+        "isActive": ''
+    });
+    cursor.each(function (err, doc) {
+        assert.equal(err, null);
+        if (doc != null) {
+            eventClick = new Object();
+            eventClick.idEvent = doc._id;
+            eventClick.title = doc.title;
+            eventClick.subtitle = doc.subtitle;
+            eventClick.description = doc.description;
+            //eventClick.author = doc.author;
+            eventClick.isActive = doc.isActive;
+            eventClick.initDate = doc.initDate;
+            eventClick.endDate = doc.endDate;
+
+            listaEventClick.push(eventClick);
+        } else {
+            callback();
+        }
+
+    });
+};
+
+/**
+ * Busqueda evento pantalla de inicio (Solo los activos)
+ */
+var allEvents = function (db, err, callback) {
+    var cursor = db.collection('events').find().sort({
+        _id: -1
+    });
+    cursor.each(function (err, doc) {
+        assert.equal(err, null);
+        if (doc != null) {
+            eventClick = new Object();
+            eventClick.idEvent = doc._id;
+            eventClick.title = doc.title;
+            eventClick.subtitle = doc.subtitle;
+            eventClick.description = doc.description;
+            //eventClick.author = doc.author;
+            eventClick.isActive = doc.isActive;
+            eventClick.initDate = doc.initDate;
+            eventClick.endDate = doc.endDate;
+
+            listaEventClick.push(eventClick);
+        } else {
+            callback();
+        }
+
+    });
+};
+
+/**
+ * Busqueda evento pantalla de inicio (Solo los activos) 6 ultimos
+ */
+var topEvents = function (db, err, callback) {
+    var cursor = db.collection('events').find({
+        "isActive": 'checked'
+    }).sort({
+        _id: -1
+    }).limit(6);
     cursor.each(function (err, doc) {
         assert.equal(err, null);
         if (doc != null) {

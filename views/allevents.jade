@@ -10,6 +10,7 @@ block content
                 th Título
                 th Subtítulo
                 th Finaliza
+                th Activo
                 th Ver
             tbody
                 each eventClick in listaEventClick
@@ -19,6 +20,11 @@ block content
                         td #{eventClick.title}
                         td #{eventClick.subtitle}
                         td #{eventClick.endDate}
+                        td
+                            if eventClick.isActive
+                                input#isActive(type='checkbox', disabled='true', checked)
+                            else
+                                input#isActive(type='checkbox', disabled='true')
                         td
                             button#add-show.btn.btn-info.btn-sm(type='submit', value='')
                                 i.fa.fa-eye
