@@ -10,6 +10,9 @@ var eventClick = new Object();
 
 var listaEventClick = [];
 
+// Importamos el modulo para subir ficheros
+var fs = require('fs');
+
 /* GET home page. */
 router.get('/', function (req, res, next) {
     MongoClient.connect(url, function (err, db) {
@@ -59,7 +62,6 @@ router.post('/allevents', function (req, res, next) {
             });
         });
     });
-
 });
 
 /*
@@ -75,12 +77,29 @@ router.post('/alta', function (req, res) {
 /*
  * Al guardar el alta nueva guardamos los datos i redireccionamos a la pantalla de Inicio
  */
+router.post('/delete', function (req, res) {
+    console.log('delete');
+    eventClick = new Object();
+    eventClick.idEvent = req.body.idEvent;
+    MongoClient.connect(url, function (err, db) {
+        assert.equal(null, err);
+        console.log("Connexió correcta");
+        deleteEvents(db, err, function () {
+            res.redirect('/');
+        });
+    });
+});
+
+/*
+ * Al guardar el alta nueva guardamos los datos i redireccionamos a la pantalla de Inicio
+ */
 router.post('/insert', function (req, res) {
     console.log('insert');
     eventClick = new Object();
     eventClick.title = req.body.titleForm;
     eventClick.subtitle = req.body.subtitleForm;
     eventClick.description = req.body.descriptionForm;
+    eventClick.url = req.body.urlForm;
     //eventClick.author = req.body.author;
     eventClick.isActive = req.body.isActiveForm;
     eventClick.initDate = req.body.initDateForm;
@@ -126,6 +145,7 @@ router.post('/update', function (req, res) {
     eventClick.title = req.body.titleForm;
     eventClick.subtitle = req.body.subtitleForm;
     eventClick.description = req.body.descriptionForm;
+    eventClick.url = req.body.urlForm;
     //eventClick.author = req.body.author;
     eventClick.isActive = req.body.isActiveForm;
     eventClick.initDate = req.body.initDateForm;
@@ -171,6 +191,7 @@ var saveEvents = function (db, err, callback) {
         "title": eventClick.title,
         "subtitle": eventClick.subtitle,
         "description": eventClick.description,
+        "url": eventClick.url,
         //"author": author,
         "isActive": eventClick.isActive,
         "initDate": eventClick.initDate,
@@ -178,6 +199,19 @@ var saveEvents = function (db, err, callback) {
     });
     assert.equal(err, null);
     console.log("Nuevo evento creado en col·lección de eventos");
+    callback();
+};
+
+/**
+ * Modificación evento (guardamos por id)
+ */
+var deleteEvents = function (db, err, callback) {
+    console.log("delete: " + eventClick.idEvent);
+    db.collection('events').remove({
+        "_id": ObjectId(eventClick.idEvent)
+    });
+    assert.equal(err, null);
+    console.log("Evento eliminado de la col·lección de eventos");
     callback();
 };
 
@@ -193,6 +227,7 @@ var editEvents = function (db, err, callback) {
             "title": eventClick.title,
             "subtitle": eventClick.subtitle,
             "description": eventClick.description,
+            "url": eventClick.url,
             "isActive": eventClick.isActive,
             "initDate": eventClick.initDate,
             "endDate": eventClick.endDate
@@ -218,6 +253,7 @@ var eventsById = function (db, err, callback) {
             eventClick.title = doc.title;
             eventClick.subtitle = doc.subtitle;
             eventClick.description = doc.description;
+            eventClick.url = doc.url;
             //eventClick.author = doc.author;
             eventClick.isActive = doc.isActive;
             eventClick.initDate = doc.initDate;
@@ -244,6 +280,7 @@ var activeEvents = function (db, err, callback) {
             eventClick.title = doc.title;
             eventClick.subtitle = doc.subtitle;
             eventClick.description = doc.description;
+            eventClick.url = doc.url;
             //eventClick.author = doc.author;
             eventClick.isActive = doc.isActive;
             eventClick.initDate = doc.initDate;
@@ -272,6 +309,7 @@ var inactiveEvents = function (db, err, callback) {
             eventClick.title = doc.title;
             eventClick.subtitle = doc.subtitle;
             eventClick.description = doc.description;
+            eventClick.url = doc.url;
             //eventClick.author = doc.author;
             eventClick.isActive = doc.isActive;
             eventClick.initDate = doc.initDate;
@@ -300,6 +338,7 @@ var allEvents = function (db, err, callback) {
             eventClick.title = doc.title;
             eventClick.subtitle = doc.subtitle;
             eventClick.description = doc.description;
+            eventClick.url = doc.url;
             //eventClick.author = doc.author;
             eventClick.isActive = doc.isActive;
             eventClick.initDate = doc.initDate;
@@ -318,7 +357,7 @@ var allEvents = function (db, err, callback) {
  */
 var topEvents = function (db, err, callback) {
     var cursor = db.collection('events').find({
-        "isActive": 'checked'
+        "isActive": 'on'
     }).sort({
         _id: -1
     }).limit(6);
@@ -330,6 +369,7 @@ var topEvents = function (db, err, callback) {
             eventClick.title = doc.title;
             eventClick.subtitle = doc.subtitle;
             eventClick.description = doc.description;
+            eventClick.url = doc.url;
             //eventClick.author = doc.author;
             eventClick.isActive = doc.isActive;
             eventClick.initDate = doc.initDate;

@@ -15,9 +15,8 @@ block content
                 input#subtitle.form-control(type='text', name='subtitleForm', placeholder='Campo de texto', value="#{eventClick.subtitle}")
               .row
                   .form-group.col-sm-4
-                    label(for='archivo') Adjuntar imagen
-                    input#fileImage(type='file', name='fileImageForm')
-                    p.help-block Que no supere los 2 MB
+                    label() Url Imagen
+                    input#url.form-control(type='text', name='urlForm', placeholder='http://imagen.jpg', value="#{eventClick.url}")
                   .form-group.col-sm-8
                     label() Fecha de inicio:
                     input#initDate.date(type='text', name='initDateForm', placeholder='DD/MM/YYYY', value="#{eventClick.initDate}")

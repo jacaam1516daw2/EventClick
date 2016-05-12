@@ -43,3 +43,7 @@ input[type=submit] {
     margin-right: 5px;
     float: left;
 }
+#imageView {
+    width: 200px;
+    height: 200px;
+}

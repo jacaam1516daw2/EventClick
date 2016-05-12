@@ -14,7 +14,7 @@ block content
         ul#listaEventClick
           each eventClick in listaEventClick
             form(role='form', method='POST' action='/show')
-                .ev.col-sm-3
+                .ev.col-sm-3(style="background-image:url('#{eventClick.url}');")
                    input(type='hidden', name='idEvent', value='#{eventClick.idEvent}')
                    h2= eventClick.title
                    h3= eventClick.subtitle

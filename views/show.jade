@@ -16,6 +16,8 @@ block content
                   .form-group
                     label() Del: #{eventClick.initDate} Al: #{eventClick.endDate}
                   .form-group
+                    img#imageView(src='#{eventClick.url}')
+                  .form-group
                     .checkbox
                         label
                             if eventClick.isActive
@@ -25,6 +27,8 @@ block content
                                 input#isActive(type='checkbox', name='isActiveForm', disabled='true')
                                 |  Activar evento
                   input#add-edit.btn.btn-info.col-sm-2(type='submit', value="Editar")
+              form(role='form', method='POST' action='/delete')
+                input#add-init.btn.btn-info.col-sm-2(type='submit', value="Eliminar")
               form(role='form', method='POST' action='/')
                 input#add-init.btn.btn-info.col-sm-2(type='submit', value="Inicio")
             .col-sm-6
