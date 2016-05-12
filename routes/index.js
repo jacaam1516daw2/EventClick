@@ -75,12 +75,13 @@ router.post('/alta', function (req, res) {
 });
 
 /*
- * Al guardar el alta nueva guardamos los datos i redireccionamos a la pantalla de Inicio
+ * Eliminación de un evento
  */
 router.post('/delete', function (req, res) {
     console.log('delete');
     eventClick = new Object();
     eventClick.idEvent = req.body.idEvent;
+
     MongoClient.connect(url, function (err, db) {
         assert.equal(null, err);
         console.log("Connexió correcta");
@@ -122,11 +123,11 @@ router.post('/edit', function (req, res) {
     console.log('edit');
     eventClick = new Object();
     eventClick.idEvent = req.body.idEvent;
+
     MongoClient.connect(url, function (err, db) {
         assert.equal(null, err);
         console.log("Connexió correcta");
         eventsById(db, err, function () {
-            console.log('eventsById edit: ' + eventClick.title);
             res.render('edit', {
                 title: 'EventClick',
                 eventClick: eventClick
@@ -219,7 +220,6 @@ var deleteEvents = function (db, err, callback) {
  * Modificación evento (guardamos por id)
  */
 var editEvents = function (db, err, callback) {
-    console.log("update: " + eventClick.idEvent);
     db.collection('events').updateOne({
         "_id": ObjectId(eventClick.idEvent)
     }, {

@@ -28,7 +28,8 @@ block content
                                 |  Activar evento
                   input#add-edit.btn.btn-info.col-sm-2(type='submit', value="Editar")
               form(role='form', method='POST' action='/delete')
-                input#add-init.btn.btn-info.col-sm-2(type='submit', value="Eliminar")
+                input(type='hidden', name='idEvent', value='#{eventClick.idEvent}')
+                input#add-delete.btn.btn-info.col-sm-2(type='submit', value="Eliminar")
               form(role='form', method='POST' action='/')
                 input#add-init.btn.btn-info.col-sm-2(type='submit', value="Inicio")
             .col-sm-6
