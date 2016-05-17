@@ -14,6 +14,9 @@ var listaEventClick = [];
 // Importamos el modulo para subir ficheros
 var fs = require('fs');
 
+/*
+ * Acciones de enrrutamientos
+ */
 /* GET home page. */
 router.get('/', function (req, res, next) {
     MongoClient.connect(url, function (err, db) {
@@ -177,6 +180,22 @@ router.post('/show', function (req, res) {
                 title: 'EventClick',
                 eventClick: eventClick
             });
+        });
+    });
+});
+
+/**
+ * Envío de mail de notificación de eventos
+ */
+router.post('/sendmail', function (req, res) {
+    console.log("sendmail");
+    eventClick = new Object();
+    eventClick.idEvent = req.body.idEvent;
+    MongoClient.connect(url, function (err, db) {
+        assert.equal(null, err);
+        console.log("Connexió correcta");
+        eventsById(db, err, function () {
+            handleSayEmail(req, res);
         });
     });
 });
@@ -387,23 +406,6 @@ var topEvents = function (db, err, callback) {
 /**
  * SEND MAIL
  */
-router.post('/sendmail', function (req, res) {
-    console.log("sendmail");
-    eventClick = new Object();
-    eventClick.idEvent = req.body.idEvent;
-    MongoClient.connect(url, function (err, db) {
-        assert.equal(null, err);
-        console.log("Connexió correcta");
-        eventsById(db, err, function () {
-            handleSayEmail(req, res);
-            /*res.render('sendmail', {
-                title: 'EventClick',
-                err: err
-            });*/
-        });
-    });
-});
-
 
 function handleSayEmail(req, res) {
     // Not the movie transporter!
