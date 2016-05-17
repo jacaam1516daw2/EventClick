@@ -2,7 +2,8 @@ var express = require('express');
 var router = express.Router();
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert'); //utilitzem assercions
-
+var nodemailer = require('nodemailer');
+var smtpTransport = require('nodemailer-smtp-transport');
 var ObjectId = require('mongodb').ObjectID;
 var url = 'mongodb://localhost:27017/EventClickBD';
 
@@ -380,6 +381,67 @@ var topEvents = function (db, err, callback) {
             callback();
         }
 
+    });
+};
+
+/**
+ * SEND MAIL
+ */
+router.post('/sendmail', function (req, res) {
+    console.log("sendmail");
+    eventClick = new Object();
+    eventClick.idEvent = req.body.idEvent;
+    MongoClient.connect(url, function (err, db) {
+        assert.equal(null, err);
+        console.log("Connexió correcta");
+        eventsById(db, err, function () {
+            handleSayEmail(req, res);
+            /*res.render('sendmail', {
+                title: 'EventClick',
+                err: err
+            });*/
+        });
+    });
+});
+
+
+function handleSayEmail(req, res) {
+    // Not the movie transporter!
+    console.log("handleSayEmail");
+    var transporter = nodemailer.createTransport(smtpTransport({
+        service: 'gmail',
+        auth: {
+            user: 'jacaam1516daw2@gmail.com', // my mail
+            pass: 'fjeclotfjeclot'
+        }
+    }));
+
+    var text = "<div><h1>" + eventClick.title + "</h1></div>" +
+        "<div><h3>" + eventClick.subtitle + "</h3></div>" +
+        "<div><label>Del:" + eventClick.initDate + "Al:" + eventClick.endDate + "</label></div>" +
+        "<div><img src=" + eventClick.url + "></div>" +
+        "<div><h3>" + eventClick.description + "</h3></div>";
+
+    var toMail = '155662.clot@fje.edu, jacaam1516daw2@gmail.com';
+
+    var mailOptions = {
+        from: 'jacaam1516daw2@gmail.com', // sender address
+        to: toMail, // list of receivers
+        subject: eventClick.title, // Subject line
+        html: text
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+        console.log("sendMail");
+        if (error) {
+            res.render('error', {
+                error: 'Error en el envío, vuelva a intentarlo de nuevo'
+            });
+        } else {
+            res.render('sendmail', {
+                yo: 'Enviado!!'
+            });
+        };
     });
 };
 
