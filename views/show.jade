@@ -33,8 +33,8 @@ block content
               form(role='form', method='POST' action='/')
                 input#add-init.btn.btn-info.col-sm-2(type='submit', value="Inicio")
               form(role='form', method='POST' action='/sendmail')
-                input(type='hidden', name='idEvent', value='#{eventClick.idEvent}')
-                input#add-init.btn.btn-info.col-sm-2(type='submit', value="Enviar Mail")
+                input(type='hidden', id='idEvent', name='idEvent', value='#{eventClick.idEvent}')
+                input#add-send.btn.btn-info.col-sm-2(type='submit', value="Enviar Mail")
             .col-sm-6
                 .form-group.row#descript
                     h3 #{eventClick.description}

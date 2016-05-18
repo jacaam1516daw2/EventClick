@@ -6,7 +6,8 @@ var nodemailer = require('nodemailer');
 var smtpTransport = require('nodemailer-smtp-transport');
 var ObjectId = require('mongodb').ObjectID;
 var url = 'mongodb://localhost:27017/EventClickBD';
-
+var http = require("http");
+var https = require("https");
 var eventClick = new Object();
 
 var listaEventClick = [];
@@ -421,10 +422,23 @@ function handleSayEmail(req, res) {
     var text = "<div><h1>" + eventClick.title + "</h1></div>" +
         "<div><h3>" + eventClick.subtitle + "</h3></div>" +
         "<div><label>Del:" + eventClick.initDate + "Al:" + eventClick.endDate + "</label></div>" +
-        "<div><img src=" + eventClick.url + "></div>" +
+        "<div><img src=" + eventClick.url + " width=200px height=200px></div>" +
         "<div><h3>" + eventClick.description + "</h3></div>";
 
-    var toMail = '155662.clot@fje.edu, jacaam1516daw2@gmail.com';
+    var toMail = 'jacaam1516daw2@gmail.com';
+    //var toMail = '';
+
+    //LLAMADA a la API para recuperar las cuentas de mail
+    var request = require('request');
+    request('http://localhost:8080/api/users', function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            var users = JSON.parse(body);
+            for (i = 0; i < users.length; i++) {
+                console.log(users[i].email)
+                console.log(users[i].name)
+            }
+        }
+    })
 
     var mailOptions = {
         from: 'jacaam1516daw2@gmail.com', // sender address
