@@ -20,6 +20,8 @@
 }
 #add-show {
     margin-right: 0%;
+    text-align: center;
+    margin: 10px;
 }
 i {
     content: "\f046";
@@ -46,4 +48,9 @@ input[type=submit] {
 #imageView {
     width: 200px;
     height: 200px;
+}
+#listaEventClick form h3,
+#listaEventClick form h2,
+#listaEventClick form p {
+    color: white;
 }

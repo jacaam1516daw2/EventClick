@@ -11,7 +11,7 @@ var https = require("https");
 var eventClick = new Object();
 
 var listaEventClick = [];
-
+var users = [];
 // Importamos el modulo para subir ficheros
 var fs = require('fs');
 
@@ -171,6 +171,22 @@ router.post('/update', function (req, res) {
  */
 router.post('/show', function (req, res) {
     console.log("show");
+    //LLAMADA a la API para recuperar las cuentas de mail
+    var request = require('request');
+    users = [];
+    request('http://localhost:8080/api/users', function (error, response, body) {
+        console.log("Call API");
+        if (!error && response.statusCode == 200) {
+            var listUsers = JSON.parse(body);
+            for (i = 0; i < listUsers.length; i++) {
+                user = new Object();
+                user.email = listUsers[i].email;
+                user.name = listUsers[i].name;
+                users.push(user);
+            }
+        }
+        console.log("End Call API");
+    })
     eventClick = new Object();
     eventClick.idEvent = req.body.idEvent;
     MongoClient.connect(url, function (err, db) {
@@ -179,7 +195,8 @@ router.post('/show', function (req, res) {
         eventsById(db, err, function () {
             res.render('show', {
                 title: 'EventClick',
-                eventClick: eventClick
+                eventClick: eventClick,
+                users: users
             });
         });
     });
@@ -426,19 +443,6 @@ function handleSayEmail(req, res) {
         "<div><h3>" + eventClick.description + "</h3></div>";
 
     var toMail = 'jacaam1516daw2@gmail.com';
-    //var toMail = '';
-
-    //LLAMADA a la API para recuperar las cuentas de mail
-    var request = require('request');
-    request('http://localhost:8080/api/users', function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-            var users = JSON.parse(body);
-            for (i = 0; i < users.length; i++) {
-                console.log(users[i].email)
-                console.log(users[i].name)
-            }
-        }
-    })
 
     var mailOptions = {
         from: 'jacaam1516daw2@gmail.com', // sender address

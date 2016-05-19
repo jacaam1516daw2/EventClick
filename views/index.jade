@@ -14,10 +14,11 @@ block content
         ul#listaEventClick
           each eventClick in listaEventClick
             form(role='form', method='POST' action='/show')
-                .ev.col-sm-3(style="background-image:url('#{eventClick.url}');")
-                   input(type='hidden', name='idEvent', value='#{eventClick.idEvent}')
-                   h2= eventClick.title
-                   h3= eventClick.subtitle
-                   p= eventClick.endDate
-                   button#add-show.btn.btn-info.btn-sm.col-sm-2(type='submit', value="")
-                    i.fa.fa-eye
+                .ev.col-sm-3(style="background-image:url('#{eventClick.url}');background-size:cover;padding: 0px;")
+                    .ev2(style="background-color: rgba(26, 87, 132, 0.65);width: 100%;height: 100%;")
+                       input(type='hidden', name='idEvent', value='#{eventClick.idEvent}')
+                       h2= eventClick.title
+                       h3= eventClick.subtitle
+                       p= eventClick.endDate
+                       button#add-show.btn.btn-info.btn-sm.col-sm-2(type='submit', value="")
+                        i.fa.fa-eye

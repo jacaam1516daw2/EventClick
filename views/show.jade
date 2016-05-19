@@ -38,3 +38,18 @@ block content
             .col-sm-6
                 .form-group.row#descript
                     h3 #{eventClick.description}
+            .col-sm-6
+                  h2 Lista de usuarios
+                  table.table.table-hover
+                    thead
+                      tr
+                        th Nombre
+                        th Correo
+                        th Enviar
+                    tbody
+                        each user in users
+                            tr
+                                td #{user.name}
+                                td #{user.email}
+                                td
+                                    input#isActive(type='checkbox', checked)
