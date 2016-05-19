@@ -6,19 +6,18 @@ $(function () {
         dateFormat: 'dd/mm/yy'
     });
 
-    /*$('#add-send').click(function () {
-        $.ajax({
-            url: 'http://localhost:8080/api/users',
-            type: 'GET',
-            data: '', // or $('#myform').serializeArray()
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (data) {
-                for (var i = 0; i < data.users.length; i++) {
-                    console.log(data.users);
-                    console.log(data);
-                }
-            },
-        });
-    });*/
+    /**
+     * Filtro para tablas
+     */
+    $(document).ready(function () {
+        (function ($) {
+            $('#filter').keyup(function () {
+                var rex = new RegExp($(this).val(), 'i');
+                $('.searchable tr').hide();
+                $('.searchable tr').filter(function () {
+                    return rex.test($(this).text());
+                }).show();
+            })
+        }(jQuery));
+    });
 });

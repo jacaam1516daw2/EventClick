@@ -35,21 +35,24 @@ block content
               form(role='form', method='POST' action='/sendmail')
                 input(type='hidden', id='idEvent', name='idEvent', value='#{eventClick.idEvent}')
                 input#add-send.btn.btn-info.col-sm-2(type='submit', value="Enviar Mail")
-            .col-sm-6
-                .form-group.row#descript
-                    h3 #{eventClick.description}
-            .col-sm-6
-                  h2 Lista de usuarios
-                  table.table.table-hover
+                .row
+                h2 Lista de usuarios
+                .input-group
+                    span.input-group-addon Filtrar
+                    input#filter.form-control(type='text', placeholder='Buscar...')
+                table.table.table-hover
                     thead
                       tr
                         th Nombre
                         th Correo
                         th Enviar
-                    tbody
+                    tbody.searchable
                         each user in users
                             tr
                                 td #{user.name}
                                 td #{user.email}
                                 td
-                                    input#isActive(type='checkbox', checked)
+                                    input(type='checkbox', checked, name='isSend', value='#{user.email}')
+            .col-sm-6
+                .form-group.row#descript
+                    h3 #{eventClick.description}

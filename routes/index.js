@@ -442,7 +442,21 @@ function handleSayEmail(req, res) {
         "<div><img src=" + eventClick.url + " width=200px height=200px></div>" +
         "<div><h3>" + eventClick.description + "</h3></div>";
 
-    var toMail = 'jacaam1516daw2@gmail.com';
+    var toMail = '';
+
+    var listMails = req.body.isSend;
+
+    if (typeof listMails === 'string') {
+        toMail = listMails;
+    } else {
+        for (i in listMails) {
+            if (toMail == '') {
+                toMail = listMails[i];
+            } else {
+                toMail = toMail + ',' + listMails[i];
+            }
+        }
+    }
 
     var mailOptions = {
         from: 'jacaam1516daw2@gmail.com', // sender address
