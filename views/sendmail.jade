@@ -1,9 +1,7 @@
 extends layout
 
 block content
-    .container#edit
-          #notyPanel.row
-             h2 Envío de notificación correcta
-           form(role='form', method='POST' action='/')
-                #{yo}
-                input#add-init.btn.btn-info.col-sm-2(type='submit', value="Inicio")
+     .msg
+        h2 #{msg}
+        form(role='form', method='POST' action='/')
+            input#add-init.btn.btn-info.col-sm-2(type='submit', value="Inicio")

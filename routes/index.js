@@ -464,19 +464,27 @@ function handleSayEmail(req, res) {
         subject: eventClick.title, // Subject line
         html: text
     };
-
-    transporter.sendMail(mailOptions, function (error, info) {
-        console.log("sendMail");
-        if (error) {
-            res.render('error', {
-                error: 'Error en el envío, vuelva a intentarlo de nuevo'
-            });
-        } else {
-            res.render('sendmail', {
-                yo: 'Enviado!!'
-            });
-        };
-    });
+    if (toMail == '') {
+        res.render('sendmail', {
+            title: 'EventClick',
+            msg: 'No has selecionado ningún usuario'
+        });
+    } else {
+        transporter.sendMail(mailOptions, function (error, info) {
+            console.log("sendMail");
+            if (error) {
+                res.render('error', {
+                    title: 'EventClick',
+                    msg: 'Error en el envío, vuelva a intentarlo de nuevo'
+                });
+            } else {
+                res.render('sendmail', {
+                    title: 'EventClick',
+                    msg: 'Envío de notificación correcta'
+                });
+            };
+        });
+    }
 };
 
 module.exports = router;
