@@ -175,7 +175,6 @@ router.post('/show', function (req, res) {
     var request = require('request');
     users = [];
     request('http://localhost:8080/api/users', function (error, response, body) {
-        console.log("Call API");
         if (!error && response.statusCode == 200) {
             var listUsers = JSON.parse(body);
             for (i = 0; i < listUsers.length; i++) {
@@ -185,7 +184,6 @@ router.post('/show', function (req, res) {
                 users.push(user);
             }
         }
-        console.log("End Call API");
     })
     eventClick = new Object();
     eventClick.idEvent = req.body.idEvent;
@@ -199,6 +197,32 @@ router.post('/show', function (req, res) {
                 users: users
             });
         });
+    });
+});
+
+/**
+ * Alta usuarios para notificar eventos
+ */
+router.post('/usermails', function (req, res) {
+    console.log("usermails");
+    //LLAMADA a la API para recuperar las cuentas de mail
+    var request = require('request');
+    users = [];
+    request('http://localhost:8080/api/users', function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            var listUsers = JSON.parse(body);
+            for (i = 0; i < listUsers.length; i++) {
+                user = new Object();
+                user.email = listUsers[i].email;
+                user.name = listUsers[i].name;
+                users.push(user);
+            }
+        }
+    })
+    console.log(users);
+    res.render('usermails', {
+        title: 'EventClick',
+        users: users
     });
 });
 
