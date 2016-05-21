@@ -49,7 +49,7 @@ input[type=submit] {
 #add-delete,
 #add-edit {
     position: relative;
-    width: 120px;
+    width: 130px;
     float: left;
     margin-right: 5px;
 }

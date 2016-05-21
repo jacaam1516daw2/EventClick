@@ -203,7 +203,7 @@ router.post('/show', function (req, res) {
 /**
  * Alta usuarios para notificar eventos
  */
-router.post('/usermails', function (req, res) {
+router.get('/usermails', function (req, res) {
     console.log("usermails");
     //LLAMADA a la API para recuperar las cuentas de mail
     var request = require('request');
@@ -218,12 +218,48 @@ router.post('/usermails', function (req, res) {
                 users.push(user);
             }
         }
-    })
-    console.log(users);
-    res.render('usermails', {
-        title: 'EventClick',
-        users: users
+        res.render('usermails', {
+            title: 'EventClick',
+            users: users
+        });
     });
+});
+
+/**
+ * Alta usuarios para notificar eventos
+ */
+router.post('/deleteUser', function (req, res) {
+    console.log("deleteUser");
+    var listMails = req.body.isSend;
+    //Load the request module
+    var request = require('request');
+
+    if (typeof listMails === 'string') {
+        request({
+            url: 'http://localhost:8080/api/users/' + listMails, //URL to hit
+            method: 'DELETE'
+        }, function (error, response, body) {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log(response.statusCode, body);
+            }
+        });
+    } else {
+        for (i in listMails) {
+            request({
+                url: 'http://localhost:8080/api/users/' + listMails[i], //URL to hit
+                method: 'DELETE'
+            }, function (error, response, body) {
+                if (error) {
+                    console.log(error);
+                } else {
+                    console.log(response.statusCode, body);
+                }
+            });
+        }
+    }
+    res.redirect('/usermails');
 });
 
 /**

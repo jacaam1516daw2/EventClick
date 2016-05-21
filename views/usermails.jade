@@ -4,25 +4,27 @@ block content
     .container#userMailis
           #userMailisPanel.row
              h3 #{title}
-             p Alta usuarios
+             p Gestión de usuarios
+          form(role='form', method='POST' action='/deleteUser')
              h2 Lista de usuarios
-                .input-group
-                    span.input-group-addon Filtrar
-                    input#filter.form-control(type='text', placeholder='Buscar...')
-                table.table.table-hover
-                    thead
-                      tr
-                        th Nombre
-                        th Correo
-                        th Enviar
-                    tbody.searchable
-                        each user in users
-                            tr
-                                td #{user.name}
-                                td #{user.email}
-                                td
-                                    input(type='checkbox', checked, name='isSend', value='#{user.email}')
-          form(role='form', method='POST' action='/delete')
-            input#add-delete.btn.btn-info.col-sm-2(type='submit', value="Eliminar")
+             .input-group
+                span.input-group-addon Filtrar
+                input#filter.form-control(type='text', placeholder='Buscar...')
+             table.table.table-hover
+                thead
+                  tr
+                    th Nombre
+                    th Correo
+                    th Enviar
+                tbody.searchable
+                    each user in users
+                        tr
+                            td #{user.name}
+                            td #{user.email}
+                            td
+                                input(type='checkbox', name='isSend', value='#{user.email}')
+             input#add-delete.btn.btn-info.col-sm-2(type='submit', value="Eliminar")
           form(role='form', method='POST' action='/')
             input#add-init.btn.btn-info.col-sm-2(type='submit', value="Inicio")
+          form(role='form', method='POST' action='/delete')
+            input#add-delete.btn.btn-info(type='submit', value="Nuevo")
