@@ -40,6 +40,11 @@ input[type=submit] {
     float: left;
     width: 150px;
 }
+#add-user {
+    width: 40px;
+    top: 25px;
+    float: right;
+}
 #add-new,
 #add-allevents,
 #add-usermails,

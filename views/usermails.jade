@@ -5,8 +5,10 @@ block content
           #userMailisPanel.row
              h3 #{title}
              p Gestión de usuarios
+             h2.col-sm-11 Lista de usuarios
+             button#add-user.btn.btn-info.col-sm-1(type='submit')
+                i.fa.fa-plus
           form(role='form', method='POST' action='/deleteUser')
-             h2 Lista de usuarios
              .input-group
                 span.input-group-addon Filtrar
                 input#filter.form-control(type='text', placeholder='Buscar...')
@@ -26,16 +28,13 @@ block content
              input#add-delete.btn.btn-info.col-sm-2(type='submit', value="Eliminar")
           form(role='form', method='POST' action='/')
             input#add-init.btn.btn-info.col-sm-2(type='submit', value="Inicio")
-          form(role='form')
-            input#add-user.btn.btn-info(type='submit', value="Añadir")
     .container#addUserPanel
         form(role='form', method='POST' action='/altaUser')
             .form-group
                 label() Nombre
-                input#title.form-control(type='text', name='nombreForm', placeholder='Campo de texto', value="Nombre")
+                input#title.form-control(type='text', name='nombreForm', placeholder='Campo de texto')
             .form-group
                 label() Correo electrónico
-                input#subtitle.form-control(type='text', name='emailForm', placeholder='Campo de texto', value="Correo electrónico")
+                input#subtitle.form-control(type='text', name='emailForm', placeholder='Campo de texto')
             input#add-altaMail.btn.btn-info(type='submit', value="Alta")
-        form(role='form')
-            input#add-cancel.btn.btn-info(type='submit', value="Cancelar")
+        input#add-cancel.btn.btn-info(type='submit', value="Cancelar")

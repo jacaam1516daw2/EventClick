@@ -19,5 +19,15 @@
                  }).show();
              })
          }(jQuery));
+         $('#addUserPanel').hide();
+         $('#userMailis').show();
+         $('#add-user').click(function () {
+             $('#addUserPanel').fadeIn("slow", function () {});
+             $('#userMailis').fadeOut("slow", function () {});
+         });
+         $('#add-cancel').click(function () {
+             $('#userMailis').fadeIn("slow", function () {});
+             $('#addUserPanel').fadeOut("slow", function () {});
+         });
      });
  });
