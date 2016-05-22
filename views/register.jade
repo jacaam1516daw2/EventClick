@@ -1,0 +1,25 @@
+extends layout
+
+block content
+    .container-fluid
+          section.container
+            .container-page
+              .col-md-6
+                h3.dark-grey Registro
+                form(role='form', method='POST' action='/insertUserClick')
+                    .form-group.col-lg-12
+                      input#name.form-control(type='text', name='nameClick', placeholder='Name')
+                    .form-group.col-lg-12
+                      input#email.form-control(type='text',  name='emailClick', placeholder='Email')
+                    .form-group.col-lg-12
+                        .input-group
+                          span.input-group-addon
+                            i.fa.fa-lock.fa-lg
+                          input#password.form-control(type='password',  name='passwordClick', placeholder='Password')
+                    .form-group.col-lg-12
+                        .input-group
+                          span.input-group-addon
+                            i.fa.fa-lock.fa-lg
+                          input#confirm.form-control(type='password',  name='confirmClick', placeholder='Confirmar Password')
+                        label#error(style="color: red;")
+                    button#add-register.btn.btn-info(type='submit') Registrar

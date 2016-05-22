@@ -9,7 +9,7 @@ var url = 'mongodb://localhost:27017/EventClickBD';
 var http = require("http");
 var https = require("https");
 var eventClick = new Object();
-
+var util = require('util');
 var listaEventClick = [];
 var users = [];
 // Importamos el modulo para subir ficheros
@@ -21,6 +21,53 @@ var fs = require('fs');
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
+    res.render('login', {
+        title: 'EventClick'
+    });
+});
+
+router.post('/login', function (req, res, next) {
+    res.redirect('/login');
+    /*// you might like to do a database look-up or something more scalable here
+    if (req.body.username && req.body.username === 'user' && req.body.password && req.body.password === 'pass') {
+        req.session.authenticated = true;
+        res.redirect('/secure');
+    } else {
+        req.flash('error', 'Username and password are incorrect');
+        res.redirect('/login');
+    }*/
+
+});
+
+/*
+ * Registro de usuarios
+ */
+
+router.post('/insertUserClick', function (req, res) {
+    console.log('insertUserClick');
+    userClick = new Object();
+    userClick.nameClick = req.body.nameClick;
+    userClick.emailClick = req.body.emailClick;
+    userClick.passwordClick = req.body.passwordClick;
+    userClick.isAdmin = 'false';
+    if (req.body.passwordClick === req.body.confirmClick) {
+        MongoClient.connect(url, function (err, db) {
+            assert.equal(null, err);
+            console.log("Connexió correcta");
+            insertUserClick(db, err, function () {
+                res.redirect('/');
+            });
+        });
+    } else {
+        res.render('register', {
+            title: 'EventClick'
+        });
+    }
+
+
+});
+
+/*router.get('/', function (req, res, next) {
     MongoClient.connect(url, function (err, db) {
         assert.equal(null, err);
         console.log("Connexió correcta");
@@ -32,8 +79,7 @@ router.get('/', function (req, res, next) {
             });
         });
     });
-
-});
+});*/
 
 /*
  * Redirección Botones de Inicio
@@ -324,6 +370,21 @@ router.post('/altaUser', function (req, res) {
 /**
  * Alta de vento nuevo
  */
+var insertUserClick = function (db, err, callback) {
+    db.collection('usersClick').insertOne({
+        "nameClick": userClick.nameClick,
+        "emailClick": userClick.emailClick,
+        "passwordClick": userClick.passwordClick,
+        "isAdmin": userClick.isAdmin
+    });
+    assert.equal(err, null);
+    console.log("Nuevo userClick creado en col·lección de usersClick");
+    callback();
+};
+
+/**
+ * Alta de vento nuevo
+ */
 var saveEvents = function (db, err, callback) {
     db.collection('events').insertOne({
         "title": eventClick.title,
@@ -542,7 +603,7 @@ function handleSayEmail(req, res) {
     var text = "<div><h1>" + eventClick.title + "</h1></div>" +
         "<div><h3>" + eventClick.subtitle + "</h3></div>" +
         "<div><label>Del:" + eventClick.initDate + "Al:" + eventClick.endDate + "</label></div>" +
-        "<div><img src=" + eventClick.url + " width=200px height=200px></div>" +
+        "<div><img src=" + eventClick.url + " width=250px height=200px></div>" +
         "<div><h3>" + eventClick.description + "</h3></div>";
 
     var toMail = '';

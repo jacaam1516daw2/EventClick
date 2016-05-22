@@ -29,5 +29,23 @@
              $('#userMailis').fadeIn("slow", function () {});
              $('#addUserPanel').fadeOut("slow", function () {});
          });
+         $('#error').hide();
+         $('#add-register').prop('disabled', true);
+         $("#confirm").keyup(function () {
+             if ($('#password').val() === $('#confirm').val()) {
+                 $('#add-register').prop('disabled', false);
+                 $('#error').text('Correcto').show();
+                 $('#error').css({
+                     'color': 'green'
+                 });
+             } else {
+                 $('#add-register').prop('disabled', true);
+                 $('#error').text('Los passwords no coinciden').show();
+                 $('#error').css({
+                     'color': 'red'
+                 });
+             }
+         });
+
      });
  });

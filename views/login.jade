@@ -1,0 +1,13 @@
+extends layout
+
+block content
+      .modal-dialog
+        .loginmodal-container
+          h1 Introduce tu Login
+          br
+          form
+            input(type='text', name='user', placeholder='Username')
+            input(type='password', name='pass', placeholder='Password')
+            input.login.loginmodal-submit(type='submit', name='login', value='Login')
+          .login-help
+            input.login.loginmodal-submit(type='submit', name='login', value='Registrar')
