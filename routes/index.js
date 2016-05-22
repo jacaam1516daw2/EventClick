@@ -16,8 +16,9 @@ var users = [];
 var fs = require('fs');
 
 /*
- * Acciones de enrrutamientos
+ * INICIO ACCIONES DE ENRUTAMIENTO
  */
+
 /* GET home page. */
 router.get('/', function (req, res, next) {
     MongoClient.connect(url, function (err, db) {
@@ -166,6 +167,30 @@ router.post('/update', function (req, res) {
     });
 });
 
+/**
+ * Envío de mail de notificación de eventos
+ */
+router.post('/sendmail', function (req, res) {
+    console.log("sendmail");
+    eventClick = new Object();
+    eventClick.idEvent = req.body.idEvent;
+    MongoClient.connect(url, function (err, db) {
+        assert.equal(null, err);
+        console.log("Connexió correcta");
+        eventsById(db, err, function () {
+            handleSayEmail(req, res);
+        });
+    });
+});
+
+/*
+ * FIN ACCIONES DE ENRUTAMIENTO
+ */
+
+/*
+ * INICIO A LLAMADAS A LA API
+ */
+
 /*
  * Visualización de evento y busqueda por id
  */
@@ -226,12 +251,11 @@ router.get('/usermails', function (req, res) {
 });
 
 /**
- * Alta usuarios para notificar eventos
+ * Eliminar usuarios para notificar eventos llamando a la API
  */
 router.post('/deleteUser', function (req, res) {
     console.log("deleteUser");
     var listMails = req.body.isSend;
-    //Load the request module
     var request = require('request');
 
     if (typeof listMails === 'string') {
@@ -263,23 +287,38 @@ router.post('/deleteUser', function (req, res) {
 });
 
 /**
- * Envío de mail de notificación de eventos
+ * Añadir usuario para notificar eventos llamando a la API
  */
-router.post('/sendmail', function (req, res) {
-    console.log("sendmail");
-    eventClick = new Object();
-    eventClick.idEvent = req.body.idEvent;
-    MongoClient.connect(url, function (err, db) {
-        assert.equal(null, err);
-        console.log("Connexió correcta");
-        eventsById(db, err, function () {
-            handleSayEmail(req, res);
-        });
+router.post('/altaUser', function (req, res) {
+    console.log("altaUser");
+    var name = req.body.nombreForm;
+    var email = req.body.emailForm;
+    var request = require('request');
+
+    request({
+        url: 'http://localhost:8080/api/users/',
+        method: 'POST',
+        json: {
+            "name": name,
+            "email": email
+        }
+    }, function (error, response, body) {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log(response.statusCode, body);
+        }
     });
+
+    res.redirect('/usermails');
 });
 
+/*
+ * FIN A LLAMADAS A LA API
+ */
+
 /**
- * MONGO ACTIONS
+ * INICIO LLAMADAS A MONGO ACTIONS
  */
 
 /**
@@ -482,7 +521,11 @@ var topEvents = function (db, err, callback) {
 };
 
 /**
- * SEND MAIL
+ * INICIO LLAMADAS A MONGO ACTIONS
+ */
+
+/**
+ * INICIO ENVIO EMAIL
  */
 
 function handleSayEmail(req, res) {
@@ -546,5 +589,9 @@ function handleSayEmail(req, res) {
         });
     }
 };
+
+/**
+ * FIN ENVIO EMAIL
+ */
 
 module.exports = router;

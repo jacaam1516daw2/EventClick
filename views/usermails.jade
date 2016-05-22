@@ -26,5 +26,16 @@ block content
              input#add-delete.btn.btn-info.col-sm-2(type='submit', value="Eliminar")
           form(role='form', method='POST' action='/')
             input#add-init.btn.btn-info.col-sm-2(type='submit', value="Inicio")
-          form(role='form', method='POST' action='/delete')
-            input#add-delete.btn.btn-info(type='submit', value="Nuevo")
+          form(role='form')
+            input#add-user.btn.btn-info(type='submit', value="Añadir")
+    .container#addUserPanel
+        form(role='form', method='POST' action='/altaUser')
+            .form-group
+                label() Nombre
+                input#title.form-control(type='text', name='nombreForm', placeholder='Campo de texto', value="Nombre")
+            .form-group
+                label() Correo electrónico
+                input#subtitle.form-control(type='text', name='emailForm', placeholder='Campo de texto', value="Correo electrónico")
+            input#add-altaMail.btn.btn-info(type='submit', value="Alta")
+        form(role='form')
+            input#add-cancel.btn.btn-info(type='submit', value="Cancelar")
