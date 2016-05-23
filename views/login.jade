@@ -5,9 +5,11 @@ block content
         .loginmodal-container
           h1 Introduce tu Login
           br
-          form
-            input(type='text', name='user', placeholder='Username')
-            input(type='password', name='pass', placeholder='Password')
+          label(style="color: red;") #{msg}
+          form(role='form', method='POST' action='/login')
+            input(type='text', name='user', placeholder='Username', value='Jaime')
+            input(type='password', name='pass', placeholder='Password', value='fjeclot')
             input.login.loginmodal-submit(type='submit', name='login', value='Login')
           .login-help
+          form(role='form', method='POST' action='/register')
             input.login.loginmodal-submit(type='submit', name='login', value='Registrar')

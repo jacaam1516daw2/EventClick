@@ -15,12 +15,6 @@
 {
     padding-left: 10px;
 }
-#add-show {
-    margin-right: 0%;
-    text-align: center;
-    margin: 10px;
-    width: 45px;
-}
 i {
     content: "\f046";
     font-size: 18px;
@@ -40,6 +34,24 @@ input[type=submit] {
     float: left;
     width: 150px;
 }
+#imageView {
+    width: 250px;
+    height: 200px;
+}
+#listaEventClick {
+    color: white;
+}
+.msg {
+    margin: auto;
+    width: 45%;
+    padding: 10px;
+}
+#add-show {
+    margin-right: 0%;
+    text-align: center;
+    margin: 10px;
+    width: 45px;
+}
 #add-user {
     width: 40px;
     top: 25px;
@@ -57,18 +69,4 @@ input[type=submit] {
     width: 130px;
     float: left;
     margin-right: 5px;
-}
-#imageView {
-    width: 250px;
-    height: 200px;
-}
-#listaEventClick form h3,
-#listaEventClick form h2,
-#listaEventClick form p {
-    color: white;
-}
-.msg {
-    margin: auto;
-    width: 45%;
-    padding: 10px;
 }

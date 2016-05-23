@@ -8,78 +8,40 @@ var ObjectId = require('mongodb').ObjectID;
 var url = 'mongodb://localhost:27017/EventClickBD';
 var http = require("http");
 var https = require("https");
+
+/*
+ * Declaracion de variables
+ */
 var eventClick = new Object();
-var util = require('util');
+var accessUser = new Object();
 var listaEventClick = [];
 var users = [];
-// Importamos el modulo para subir ficheros
-var fs = require('fs');
+var isLogin = '';
 
 /*
  * INICIO ACCIONES DE ENRUTAMIENTO
  */
 
-/* GET home page. */
 router.get('/', function (req, res, next) {
-    res.render('login', {
-        title: 'EventClick'
-    });
-});
-
-router.post('/login', function (req, res, next) {
-    res.redirect('/login');
-    /*// you might like to do a database look-up or something more scalable here
-    if (req.body.username && req.body.username === 'user' && req.body.password && req.body.password === 'pass') {
-        req.session.authenticated = true;
-        res.redirect('/secure');
+    if (isLogin == '') {
+        res.render('login', {
+            title: 'EventClick',
+            listaEventClick: listaEventClick
+        });
     } else {
-        req.flash('error', 'Username and password are incorrect');
-        res.redirect('/login');
-    }*/
-
-});
-
-/*
- * Registro de usuarios
- */
-
-router.post('/insertUserClick', function (req, res) {
-    console.log('insertUserClick');
-    userClick = new Object();
-    userClick.nameClick = req.body.nameClick;
-    userClick.emailClick = req.body.emailClick;
-    userClick.passwordClick = req.body.passwordClick;
-    userClick.isAdmin = 'false';
-    if (req.body.passwordClick === req.body.confirmClick) {
         MongoClient.connect(url, function (err, db) {
             assert.equal(null, err);
             console.log("Connexió correcta");
-            insertUserClick(db, err, function () {
-                res.redirect('/');
+            listaEventClick = [];
+            topEvents(db, err, function () {
+                res.render('index', {
+                    title: 'EventClick',
+                    listaEventClick: listaEventClick
+                });
             });
-        });
-    } else {
-        res.render('register', {
-            title: 'EventClick'
         });
     }
-
-
 });
-
-/*router.get('/', function (req, res, next) {
-    MongoClient.connect(url, function (err, db) {
-        assert.equal(null, err);
-        console.log("Connexió correcta");
-        listaEventClick = [];
-        topEvents(db, err, function () {
-            res.render('index', {
-                title: 'EventClick',
-                listaEventClick: listaEventClick
-            });
-        });
-    });
-});*/
 
 /*
  * Redirección Botones de Inicio
@@ -96,7 +58,76 @@ router.post('/', function (req, res, next) {
             });
         });
     });
+});
 
+/* GET home page. */
+router.get('/login', function (req, res, next) {
+    res.render('login', {
+        title: 'EventClick',
+        msg: ''
+    });
+});
+
+router.post('/login', function (req, res, next) {
+    console.log('login');
+    accessUser = new Object();
+    accessUser.nameClick = req.body.user;
+    accessUser.passwordClick = req.body.pass;
+    accessUser.isAdmin = false;
+    console.log('login post: ' + accessUser.nameClick);
+
+    MongoClient.connect(url, function (err, db) {
+        assert.equal(null, err);
+        console.log("Connexió correcta");
+        loginAccess(db, err, function () {
+
+            if (accessUser.isAdmin) {
+                isLogin = accessUser.nameClick;
+                res.redirect('/');
+            } else {
+                console.log('error login');
+                res.render('login', {
+                    title: 'EventClick',
+                    msg: 'Username and password are incorrect'
+                });
+            }
+        });
+    });
+});
+
+/*
+ * Registro de usuarios
+ */
+router.post('/insertUserClick', function (req, res) {
+    console.log('insertUserClick');
+    userClick = new Object();
+    userClick.nameClick = req.body.nameClick;
+    userClick.emailClick = req.body.emailClick;
+    userClick.passwordClick = req.body.passwordClick;
+    userClick.isAdmin = 'false';
+    if (req.body.passwordClick === req.body.confirmClick) {
+        MongoClient.connect(url, function (err, db) {
+            assert.equal(null, err);
+            console.log("Connexió correcta");
+            insertUserClick(db, err, function () {
+                res.redirect('/');
+            });
+        });
+    } else {
+        res.render('/login', {
+            title: 'EventClick'
+        });
+    }
+});
+
+/*
+ * Redirección de Inicio a la pantalla de Altas
+ */
+router.post('/register', function (req, res) {
+    console.log('register');
+    res.render('register', {
+        title: 'EventClick'
+    });
 });
 
 /*
@@ -366,6 +397,33 @@ router.post('/altaUser', function (req, res) {
 /**
  * INICIO LLAMADAS A MONGO ACTIONS
  */
+
+/**
+ * Busqueda evento por ID
+ */
+var loginAccess = function (db, err, callback) {
+    console.log("loginAccess");
+    console.log("init: " + accessUser.nameClick);
+    var cursor = db.collection('usersClick').find({
+        "nameClick": accessUser.nameClick,
+        "passwordClick": accessUser.passwordClick
+    });
+
+    cursor.each(function (err, doc) {
+        assert.equal(err, null);
+        if (doc != null) {
+            console.log("dentro");
+            accessUser.id = doc._id;
+            accessUser.emailClick = doc.emailClick;
+            accessUser.isAdmin = doc.isAdmin;
+            accessUser.nameClick = doc.nameClick;
+            console.log("end: " + accessUser.isAdmin);
+        } else {
+            callback();
+        }
+
+    });
+};
 
 /**
  * Alta de vento nuevo
