@@ -54,6 +54,11 @@ input[type=submit] {
 }
 #add-user {
     width: 40px;
+    top: 10px;
+    float: right;
+}
+#add-logout {
+    width: 40px;
     top: 25px;
     float: right;
 }

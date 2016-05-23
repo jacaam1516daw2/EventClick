@@ -3,14 +3,19 @@ extends layout
 block content
      .container#init
       .jumbotron
+        form(role='form', method='POST' action='/logout')
+            button#add-logout.btn.btn-info.col-sm-1(type='submit')
+                i.fa.fa-sign-out
         h1 Bienvenido a #{title}
         p Crea y gestiona tus eventos
-        form(role='form', method='POST' action='/alta')
-            button#add-new.btn.btn-info(type='submit') Nuevo evento
         form(role='form', method='POST' action='/allevents')
             button#add-allevents.btn.btn-info(type='submit') Ver eventos
-        form(role='form', method='GET' action='/usermails')
-            button#add-usermails.btn.btn-info(type='submit') Gestión usuarios
+        if isAdmin == "true"
+            form(role='form', method='POST' action='/alta')
+                button#add-new.btn.btn-info(type='submit') Nuevo evento
+            form(role='form', method='GET' action='/usermails')
+                button#add-usermails.btn.btn-info(type='submit') Gestión usuarios
+        else
       .row
         h1 Eventos
         #listaEventClick

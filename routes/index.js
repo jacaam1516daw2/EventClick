@@ -17,12 +17,13 @@ var accessUser = new Object();
 var listaEventClick = [];
 var users = [];
 var isLogin = '';
-
+var isAdmin;
 /*
  * INICIO ACCIONES DE ENRUTAMIENTO
  */
 
 router.get('/', function (req, res, next) {
+    console.log(isLogin);
     if (isLogin == '') {
         res.render('login', {
             title: 'EventClick',
@@ -36,7 +37,8 @@ router.get('/', function (req, res, next) {
             topEvents(db, err, function () {
                 res.render('index', {
                     title: 'EventClick',
-                    listaEventClick: listaEventClick
+                    listaEventClick: listaEventClick,
+                    isAdmin: isAdmin
                 });
             });
         });
@@ -54,18 +56,23 @@ router.post('/', function (req, res, next) {
         topEvents(db, err, function () {
             res.render('index', {
                 title: 'EventClick',
-                listaEventClick: listaEventClick
+                listaEventClick: listaEventClick,
+                isAdmin: isAdmin
             });
         });
     });
 });
 
-/* GET home page. */
-router.get('/login', function (req, res, next) {
-    res.render('login', {
-        title: 'EventClick',
-        msg: ''
-    });
+/*
+ * Logout
+ */
+
+router.post('/logout', function (req, res, next) {
+    console.log('logout');
+    isAdmin = '';
+    isLogin = '';
+    userClick = new Object();
+    res.redirect('/');
 });
 
 router.post('/login', function (req, res, next) {
@@ -73,23 +80,22 @@ router.post('/login', function (req, res, next) {
     accessUser = new Object();
     accessUser.nameClick = req.body.user;
     accessUser.passwordClick = req.body.pass;
-    accessUser.isAdmin = false;
-    console.log('login post: ' + accessUser.nameClick);
 
     MongoClient.connect(url, function (err, db) {
         assert.equal(null, err);
         console.log("Connexió correcta");
         loginAccess(db, err, function () {
-
-            if (accessUser.isAdmin) {
-                isLogin = accessUser.nameClick;
-                res.redirect('/');
-            } else {
-                console.log('error login');
+            if (accessUser.id === '' || accessUser.id === undefined) {
+                console.log('id: ' + accessUser.id);
                 res.render('login', {
                     title: 'EventClick',
                     msg: 'Username and password are incorrect'
                 });
+            } else {
+                isAdmin = accessUser.isAdmin;
+                isLogin = accessUser.nameClick;
+                console.log('admin: ' + isAdmin);
+                res.redirect('/');
             }
         });
     });
