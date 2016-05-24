@@ -41,10 +41,11 @@ block content
                   form(role='form', method='POST' action='/delete')
                     input(type='hidden', name='idEvent', value='#{eventClick.idEvent}')
                     input#add-delete.btn.btn-info(type='submit', value="Eliminar")
-                    .row
-                        h3 Lista de usuarios para notificar
-                        form(role='form', method='POST' action='/sendmail')
-                            input#add-send.btn.btn-info(type='submit', value="Enviar Mail")
+                  .row
+                      h3 Lista de usuarios para notificar
+                      label(style="color: green;") #{send}
+                      form(role='form', method='POST' action='/sendmail')
+                        input(type='hidden', name='idEvent', value='#{eventClick.idEvent}')
                         .input-group
                             span.input-group-addon Filtrar
                             input#filter.form-control(type='text', placeholder='Buscar...')
@@ -61,11 +62,12 @@ block content
                                         td #{user.email}
                                         td
                                             input(type='checkbox', checked, name='isSend', value='#{user.email}')
+                        input#add-send.btn.btn-info(type='submit', value="Enviar Mail")
                 else
             .col-sm-6
                 form(role='form', method='POST' action='/logout')
-                        button#add-logout.btn.btn-info.col-sm-2(type='submit')
-                            i.fa.fa-sign-out
+                    button#add-logout.btn.btn-info.col-sm-2(type='submit')
+                        i.fa.fa-sign-out
                 .form-group.row#descript
                     h3 #{eventClick.description}
             .col-sm-6

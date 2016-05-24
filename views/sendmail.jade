@@ -2,9 +2,6 @@ extends layout
 
 block content
      .msg
-        form(role='form', method='POST' action='/logout')
-            button#add-logout.btn.btn-info.col-sm-1(type='submit')
-                i.fa.fa-sign-out
         h2 #{msg}
         form(role='form', method='POST' action='/')
             input#add-init.btn.btn-info.col-sm-2(type='submit', value="Inicio")
