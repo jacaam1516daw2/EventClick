@@ -2,6 +2,9 @@ extends layout
 
 block content
     .msg
+      form(role='form', method='POST' action='/logout')
+        button#add-logout.btn.btn-info.col-sm-1(type='submit')
+          i.fa.fa-sign-out
       h3 #{title}
       pre Error
       pre #{msg}

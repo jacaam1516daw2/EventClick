@@ -2,8 +2,11 @@ extends layout
 
 block content
     .container
-         h3 #{title}
-         p Lista de eventos
+        form(role='form', method='POST' action='/logout')
+            button#add-logout.btn.btn-info.col-sm-1(type='submit')
+                i.fa.fa-sign-out
+        h3 #{title}
+        p Lista de eventos
           .input-group
             span.input-group-addon Filtrar
             input#filter.form-control(type='text', placeholder='Buscar...')

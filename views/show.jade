@@ -2,6 +2,9 @@ extends layout
 
 block content
     .container#show
+        form(role='form', method='POST' action='/logout')
+            button#add-logout.btn.btn-info.col-sm-1(type='submit')
+                i.fa.fa-sign-out
         .row
             .col-sm-6
               #showPanel.row
