@@ -147,7 +147,8 @@ router.post('/allevents', function (req, res, next) {
         allEvents(db, err, function () {
             res.render('allevents', {
                 title: 'EventClick',
-                listaEventClick: listaEventClick
+                listaEventClick: listaEventClick,
+                isAdmin: isAdmin
             });
         });
     });
@@ -302,7 +303,8 @@ router.post('/show', function (req, res) {
             res.render('show', {
                 title: 'EventClick',
                 eventClick: eventClick,
-                users: users
+                users: users,
+                isAdmin: isAdmin
             });
         });
     });
