@@ -167,6 +167,7 @@ router.post('/alta', function (req, res) {
 router.post('/delete', function (req, res) {
     console.log('delete');
     eventClick = new Object();
+    console.log('delete: ' + req.body.idEvent)
     eventClick.idEvent = req.body.idEvent;
 
     MongoClient.connect(url, function (err, db) {
@@ -594,6 +595,7 @@ var saveEvents = function (db, err, callback) {
  */
 var deleteEvents = function (db, err, callback) {
     console.log("deleteEvents");
+    console.log("deleteEvents: " + eventClick.idEvent);
     db.collection('events').remove({
         "_id": ObjectId(eventClick.idEvent)
     });

@@ -44,7 +44,6 @@ block content
                     .row
                         h3 Lista de usuarios para notificar
                         form(role='form', method='POST' action='/sendmail')
-                            input(type='hidden', id='idEvent', name='idEvent', value='#{eventClick.idEvent}')
                             input#add-send.btn.btn-info(type='submit', value="Enviar Mail")
                         .input-group
                             span.input-group-addon Filtrar
