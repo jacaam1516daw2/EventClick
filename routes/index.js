@@ -283,11 +283,11 @@ router.post('/signme', function (req, res, next) {
     userSign.email = accessUser.emailClick;
     userSign.name = accessUser.nameClick;
 
+    listaUserSign = [];
     MongoClient.connect(url, function (err, db) {
         assert.equal(null, err);
         console.log("Connexió correcta");
         userSignme(db, err, function () {
-            listaUserSign = [];
             inscriptionUsers(db, err, function () {
                 res.render('show', {
                     title: 'EventClick',
@@ -310,12 +310,12 @@ router.post('/unsignme', function (req, res, next) {
     userSign = new Object();
     userSign.idEvent = req.body.idEvent;
     userSign.idUser = accessUser.id;
+    listaUserSign = [];
 
     MongoClient.connect(url, function (err, db) {
         assert.equal(null, err);
         console.log("Connexió correcta");
         userUnSignme(db, err, function () {
-            listaUserSign = [];
             inscriptionUsers(db, err, function () {
                 res.render('show', {
                     title: 'EventClick',
@@ -352,16 +352,19 @@ router.post('/show', function (req, res) {
     eventClick = new Object();
     eventClick.idEvent = req.body.idEvent;
     listaUserSign = [];
+    userSign = new Object();
+    userSign.idEvent = eventClick.idEvent;
+
+    listaUserSign = [];
     MongoClient.connect(url, function (err, db) {
         assert.equal(null, err);
         console.log("Connexió correcta");
 
         eventsById(db, err, function () {
-            listaUserSign = [];
             inscriptionUsers(db, err, function () {
                 var msg = 'No estas inscrito en este evento';
                 for (i in listaUserSign) {
-                    if (i.idUser = accessUser.id) {
+                    if (i.idUser == accessUser.id) {
                         msg = 'Estas inscrito en este evento';
                         break;
                     }
@@ -547,7 +550,9 @@ var userUnSignme = function (db, err, callback) {
  * Lista usuarios inscritos
  */
 var inscriptionUsers = function (db, err, callback) {
-    var cursor = db.collection('userSignme').find({});
+    var cursor = db.collection('userSignme').find({
+        "idEvent": userSign.idEvent
+    });
     cursor.each(function (err, doc) {
         assert.equal(err, null);
         if (doc != null) {

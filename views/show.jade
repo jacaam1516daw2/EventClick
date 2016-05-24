@@ -2,9 +2,6 @@ extends layout
 
 block content
     .container#show
-        form(role='form', method='POST' action='/logout')
-            button#add-logout.btn.btn-info.col-sm-1(type='submit')
-                i.fa.fa-sign-out
         .row
             .col-sm-6
               #showPanel.row
@@ -67,6 +64,9 @@ block content
                                             input(type='checkbox', checked, name='isSend', value='#{user.email}')
                 else
             .col-sm-6
+                form(role='form', method='POST' action='/logout')
+                        button#add-logout.btn.btn-info.col-sm-2(type='submit')
+                            i.fa.fa-sign-out
                 .form-group.row#descript
                     h3 #{eventClick.description}
             .col-sm-6
