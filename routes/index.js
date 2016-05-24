@@ -14,17 +14,17 @@ var https = require("https");
  */
 var eventClick = new Object();
 var accessUser = new Object();
+var userSign = new Object();
 var listaEventClick = [];
+var listaUserSign = [];
 var users = [];
-var isLogin = '';
-var isAdmin;
+
 /*
  * INICIO ACCIONES DE ENRUTAMIENTO
  */
 
 router.get('/', function (req, res, next) {
-    console.log(isLogin);
-    if (isLogin == '') {
+    if (accessUser.id == '' || accessUser.id === undefined) {
         res.render('login', {
             title: 'EventClick',
             listaEventClick: listaEventClick
@@ -38,7 +38,7 @@ router.get('/', function (req, res, next) {
                 res.render('index', {
                     title: 'EventClick',
                     listaEventClick: listaEventClick,
-                    isAdmin: isAdmin
+                    accessUser: accessUser
                 });
             });
         });
@@ -57,7 +57,7 @@ router.post('/', function (req, res, next) {
             res.render('index', {
                 title: 'EventClick',
                 listaEventClick: listaEventClick,
-                isAdmin: isAdmin
+                accessUser: accessUser
             });
         });
     });
@@ -69,12 +69,13 @@ router.post('/', function (req, res, next) {
 
 router.post('/logout', function (req, res, next) {
     console.log('logout');
-    isAdmin = '';
-    isLogin = '';
-    userClick = new Object();
+    accessUser = new Object();
     res.redirect('/');
 });
 
+/*
+ * Login
+ */
 router.post('/login', function (req, res, next) {
     console.log('login');
     accessUser = new Object();
@@ -86,15 +87,11 @@ router.post('/login', function (req, res, next) {
         console.log("Connexió correcta");
         loginAccess(db, err, function () {
             if (accessUser.id === '' || accessUser.id === undefined) {
-                console.log('id: ' + accessUser.id);
                 res.render('login', {
                     title: 'EventClick',
                     msg: 'Username and password are incorrect'
                 });
             } else {
-                isAdmin = accessUser.isAdmin;
-                isLogin = accessUser.nameClick;
-                console.log('admin: ' + isAdmin);
                 res.redirect('/');
             }
         });
@@ -148,7 +145,7 @@ router.post('/allevents', function (req, res, next) {
             res.render('allevents', {
                 title: 'EventClick',
                 listaEventClick: listaEventClick,
-                isAdmin: isAdmin
+                accessUser: accessUser
             });
         });
     });
@@ -276,6 +273,64 @@ router.post('/sendmail', function (req, res) {
  */
 
 /*
+ * Inscribirse al evento
+ */
+router.post('/signme', function (req, res, next) {
+    console.log('signme');
+    userSign = new Object();
+    userSign.idEvent = req.body.idEvent;
+    userSign.idUser = accessUser.id;
+    userSign.email = accessUser.emailClick;
+    userSign.name = accessUser.nameClick;
+
+    MongoClient.connect(url, function (err, db) {
+        assert.equal(null, err);
+        console.log("Connexió correcta");
+        userSignme(db, err, function () {
+            listaUserSign = [];
+            inscriptionUsers(db, err, function () {
+                res.render('show', {
+                    title: 'EventClick',
+                    eventClick: eventClick,
+                    users: users,
+                    accessUser: accessUser,
+                    listaUserSign: listaUserSign,
+                    msg: 'Estas inscrito en este evento'
+                });
+            });
+        });
+    });
+});
+
+/*
+ * DesInscribirse al evento
+ */
+router.post('/unsignme', function (req, res, next) {
+    console.log('unsignme');
+    userSign = new Object();
+    userSign.idEvent = req.body.idEvent;
+    userSign.idUser = accessUser.id;
+
+    MongoClient.connect(url, function (err, db) {
+        assert.equal(null, err);
+        console.log("Connexió correcta");
+        userUnSignme(db, err, function () {
+            listaUserSign = [];
+            inscriptionUsers(db, err, function () {
+                res.render('show', {
+                    title: 'EventClick',
+                    eventClick: eventClick,
+                    users: users,
+                    accessUser: accessUser,
+                    listaUserSign: listaUserSign,
+                    msg: 'No estas inscrito en este evento'
+                });
+            });
+        });
+    });
+});
+
+/*
  * Visualización de evento y busqueda por id
  */
 router.post('/show', function (req, res) {
@@ -296,15 +351,29 @@ router.post('/show', function (req, res) {
     })
     eventClick = new Object();
     eventClick.idEvent = req.body.idEvent;
+    listaUserSign = [];
     MongoClient.connect(url, function (err, db) {
         assert.equal(null, err);
         console.log("Connexió correcta");
+
         eventsById(db, err, function () {
-            res.render('show', {
-                title: 'EventClick',
-                eventClick: eventClick,
-                users: users,
-                isAdmin: isAdmin
+            listaUserSign = [];
+            inscriptionUsers(db, err, function () {
+                var msg = 'No estas inscrito en este evento';
+                for (i in listaUserSign) {
+                    if (i.idUser = accessUser.id) {
+                        msg = 'Estas inscrito en este evento';
+                        break;
+                    }
+                }
+                res.render('show', {
+                    title: 'EventClick',
+                    eventClick: eventClick,
+                    users: users,
+                    accessUser: accessUser,
+                    listaUserSign: listaUserSign,
+                    msg: msg
+                });
             });
         });
     });
@@ -411,7 +480,6 @@ router.post('/altaUser', function (req, res) {
  */
 var loginAccess = function (db, err, callback) {
     console.log("loginAccess");
-    console.log("init: " + accessUser.nameClick);
     var cursor = db.collection('usersClick').find({
         "nameClick": accessUser.nameClick,
         "passwordClick": accessUser.passwordClick
@@ -420,12 +488,10 @@ var loginAccess = function (db, err, callback) {
     cursor.each(function (err, doc) {
         assert.equal(err, null);
         if (doc != null) {
-            console.log("dentro");
             accessUser.id = doc._id;
             accessUser.emailClick = doc.emailClick;
             accessUser.isAdmin = doc.isAdmin;
             accessUser.nameClick = doc.nameClick;
-            console.log("end: " + accessUser.isAdmin);
         } else {
             callback();
         }
@@ -434,7 +500,7 @@ var loginAccess = function (db, err, callback) {
 };
 
 /**
- * Alta de vento nuevo
+ * Insertar usuario nuevo
  */
 var insertUserClick = function (db, err, callback) {
     db.collection('usersClick').insertOne({
@@ -449,7 +515,58 @@ var insertUserClick = function (db, err, callback) {
 };
 
 /**
- * Alta de vento nuevo
+ * Inscribir usuario
+ */
+var userSignme = function (db, err, callback) {
+    db.collection('userSignme').insertOne({
+        "idEvent": userSign.idEvent,
+        "idUser": userSign.idUser,
+        "name": userSign.name,
+        "email": userSign.email
+    });
+    assert.equal(err, null);
+    console.log("Usuario inscrito");
+    callback();
+};
+
+/**
+ * Desinscribir usuario
+ */
+var userUnSignme = function (db, err, callback) {
+    console.log("userunSignme");
+    db.collection('userSignme').remove({
+        "idEvent": userSign.idEvent,
+        "idUser": userSign.idUser
+    });
+    assert.equal(err, null);
+    console.log("Usuario desinscrito");
+    callback();
+};
+
+/**
+ * Lista usuarios inscritos
+ */
+var inscriptionUsers = function (db, err, callback) {
+    var cursor = db.collection('userSignme').find({});
+    cursor.each(function (err, doc) {
+        assert.equal(err, null);
+        if (doc != null) {
+            userSign = new Object();
+            userSign.idEvent = doc._id;
+            userSign.idUser = doc.title;
+            userSign.name = doc.name;
+            userSign.email = doc.email;
+
+            listaUserSign.push(userSign);
+        } else {
+            callback();
+        }
+
+    });
+};
+
+/**
+ * Alta de evento nuevo
  */
 var saveEvents = function (db, err, callback) {
     db.collection('events').insertOne({
@@ -471,7 +588,7 @@ var saveEvents = function (db, err, callback) {
  * Modificación evento (guardamos por id)
  */
 var deleteEvents = function (db, err, callback) {
-    console.log("delete: " + eventClick.idEvent);
+    console.log("deleteEvents");
     db.collection('events').remove({
         "_id": ObjectId(eventClick.idEvent)
     });
