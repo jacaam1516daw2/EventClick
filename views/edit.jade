@@ -6,8 +6,8 @@ block content
             button#add-logout.btn.btn-info.col-sm-1(type='submit')
                 i.fa.fa-sign-out
           #editPanel.row
-             h3 #{title}
-             p Modificar evento
+             img#logo(src='/images/Eventclick.png', alt='EventClick')
+             h3 Modificar evento
           form(role='form', method='POST' action='/update')
               .form-group
                 input(type='hidden', name='idEvent', value='#{eventClick.idEvent}')

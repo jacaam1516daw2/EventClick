@@ -50,18 +50,25 @@ router.get('/', function (req, res, next) {
  * Redirección Botones de Inicio
  */
 router.post('/', function (req, res, next) {
-    MongoClient.connect(url, function (err, db) {
-        assert.equal(null, err);
-        console.log("Connexió correcta");
-        listaEventClick = [];
-        topEvents(db, err, function () {
-            res.render('index', {
-                title: 'EventClick',
-                listaEventClick: listaEventClick,
-                accessUser: accessUser
+    if (accessUser.id == '' || accessUser.id === undefined) {
+        res.render('login', {
+            title: 'EventClick',
+            listaEventClick: listaEventClick
+        });
+    } else {
+        MongoClient.connect(url, function (err, db) {
+            assert.equal(null, err);
+            console.log("Connexió correcta");
+            listaEventClick = [];
+            topEvents(db, err, function () {
+                res.render('index', {
+                    title: 'EventClick',
+                    listaEventClick: listaEventClick,
+                    accessUser: accessUser
+                });
             });
         });
-    });
+    }
 });
 
 /*

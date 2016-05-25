@@ -6,8 +6,8 @@ block content
             button#add-logout.btn.btn-info.col-sm-1(type='submit')
                 i.fa.fa-sign-out
           #altaPanel.row
-             h3 #{title}
-             p Alta de evento
+             img#logo(src='/images/Eventclick.png', alt='EventClick')
+             h3 Alta de evento
           form(role='form', method='POST' action='/insert')
               .form-group
                 label() Título

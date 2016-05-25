@@ -82,9 +82,11 @@ input[type=submit] {
 #add-new,
 #add-allevents,
 #add-usermails,
+#add-reginit,
 #add-send,
 #add-putme,
 #add-init,
+#add-register,
 #add-delete,
 #add-edit {
     position: relative;
