@@ -18,6 +18,7 @@ var userSign = new Object();
 var listaEventClick = [];
 var listaUserSign = [];
 var users = [];
+var toMail;
 
 /*
  * INICIO ACCIONES DE ENRUTAMIENTO
@@ -108,11 +109,14 @@ router.post('/insertUserClick', function (req, res) {
     userClick.emailClick = req.body.emailClick;
     userClick.passwordClick = req.body.passwordClick;
     userClick.isAdmin = 'false';
+    toMail = userClick.emailClick;
+
     if (req.body.passwordClick === req.body.confirmClick) {
         MongoClient.connect(url, function (err, db) {
             assert.equal(null, err);
             console.log("Connexió correcta");
             insertUserClick(db, err, function () {
+                InsertUserEmail();
                 res.redirect('/');
             });
         });
@@ -266,14 +270,6 @@ router.post('/sendmail', function (req, res) {
 });
 
 /*
- * FIN ACCIONES DE ENRUTAMIENTO
- */
-
-/*
- * INICIO A LLAMADAS A LA API
- */
-
-/*
  * Inscribirse al evento
  */
 router.post('/signme', function (req, res, next) {
@@ -383,6 +379,14 @@ router.post('/show', function (req, res) {
     });
 });
 
+/*
+ * FIN ACCIONES DE ENRUTAMIENTO
+ */
+
+/*
+ * INICIO A LLAMADAS A LA API
+ */
+
 /**
  * Alta usuarios para notificar eventos
  */
@@ -412,7 +416,7 @@ router.get('/usermails', function (req, res) {
  * Eliminar usuarios para notificar eventos llamando a la API
  */
 router.post('/deleteUser', function (req, res) {
-    console.log("deleteUser");
+    console.log("deleteUser: " + req.body.isSend);
     var listMails = req.body.isSend;
     var request = require('request');
 
@@ -465,9 +469,10 @@ router.post('/altaUser', function (req, res) {
             console.log(error);
         } else {
             console.log(response.statusCode, body);
+            toMail = email;
+            InsertUserEmail();
         }
     });
-
     res.redirect('/usermails');
 });
 
@@ -776,7 +781,7 @@ var topEvents = function (db, err, callback) {
  */
 
 /**
- * INICIO ENVIO EMAIL
+ * ENVIO EMAIL de Evento
  */
 
 function handleSayEmail(req, res) {
@@ -837,6 +842,58 @@ function handleSayEmail(req, res) {
                     msg: 'Envío de notificación correcta'
                 });
             };
+        });
+    }
+};
+
+/**
+ * ENVIO EMAIL de Alta usuario
+ */
+function InsertUserEmail(req, res) {
+    // Not the movie transporter!
+    console.log("InsertUserEmail");
+    var transporter = nodemailer.createTransport(smtpTransport({
+        service: 'gmail',
+        auth: {
+            user: 'jacaam1516daw2@gmail.com', // my mail
+            pass: 'fjeclotfjeclot'
+        }
+    }));
+
+    MongoClient.connect(url, function (err, db) {
+        assert.equal(null, err);
+        console.log("Connexió correcta");
+        listaEventClick = [];
+        topEvents(db, err, function () {});
+    });
+    var text = "<div class='container'> <h2>EvenClick</h2> <p>Bienvenido a EventClick</p> <p>Correo de confirmación de" + "EventClick</p> <h3>Estos son los últimos eventos creados</h3> <table style='width: 100%;background-color: #eee;color:" + "#ffffff;text-align:center'> <tr style='background-color: #000'> <th>Título</th> <th>Subtítulo</th> <th>Finaliza</th> </tr>"
+    for (i in listaEventClick) {
+        text = text + "<tr style='color: #000;border: 1px solid black;border-collapse: collapse;'>" +
+            listaEventClick[i].title + "</td><td>" + listaEventClick[i].subtitle + "</td><td>" +
+            listaEventClick[i].endDate + "</td></tr>";
+    }
+    text = text + "</tbody></table></div>";
+
+    var mailOptions = {
+        from: 'jacaam1516daw2@gmail.com', // sender address
+        to: toMail, // list of receivers
+        subject: 'Bienvenido a EventClick', // Subject line
+        html: text
+    };
+    if (toMail == '') {
+        res.render('sendmail', {
+            title: 'EventClick',
+            msg: 'No has selecionado ningún usuario'
+        });
+    } else {
+        transporter.sendMail(mailOptions, function (error, info) {
+            console.log("sendMail");
+            if (error) {
+                res.render('error', {
+                    title: 'EventClick',
+                    msg: 'Error en el envío, vuelva a intentarlo de nuevo'
+                });
+            }
         });
     }
 };
