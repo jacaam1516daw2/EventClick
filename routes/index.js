@@ -359,12 +359,14 @@ router.post('/show', function (req, res) {
 
         eventsById(db, err, function () {
             inscriptionUsers(db, err, function () {
-                var msg = 'No estas inscrito en este evento';
+                var msg = '';
                 for (i in listaUserSign) {
-                    if (i.idUser == accessUser.id) {
+                    if (listaUserSign[i].email == accessUser.emailClick) {
                         msg = 'Estas inscrito en este evento';
-                        break;
                     }
+                }
+                if (msg == '') {
+                    msg = 'No estas inscrito en este evento';
                 }
                 res.render('show', {
                     title: 'EventClick',
