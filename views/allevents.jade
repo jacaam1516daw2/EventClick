@@ -2,37 +2,37 @@ extends layout
 
 block content
     .container
-        form(role='form', method='POST' action='/logout')
-            button#add-logout.btn.btn-info.col-sm-1(type='submit')
-                i.fa.fa-sign-out
-        img#logo(src='/images/Eventclick.png', alt='EventClick')
-        h3 Lista de eventos
-          .input-group
-            span.input-group-addon Filtrar
-            input#filter.form-control(type='text', placeholder='Buscar...')
-          table.table.table-hover
-            thead
-              tr
-                th Título
-                th Subtítulo
-                th Finaliza
-                th Activo
-                th Ver
-            tbody.searchable
-                each eventClick in listaEventClick
-                    form(role='form', method='POST' action='/show')
-                      tr
-                        input(type='hidden', name='idEvent', value='#{eventClick.idEvent}')
-                        td #{eventClick.title}
-                        td #{eventClick.subtitle}
-                        td #{eventClick.endDate}
-                        td
-                            if eventClick.isActive
-                                input#isActive(type='checkbox', disabled='true', checked)
-                            else
-                                input#isActive(type='checkbox', disabled='true')
-                        td
-                            button#add-show.btn.btn-info.btn-sm(type='submit', value='')
-                                i.fa.fa-eye
-         form(role='form', method='POST' action='/')
-              input#add-init.btn.btn-info.col-sm-2(type='submit', value="Inicio")
+      form(role='form', method='POST' action='/logout')
+        button#add-logout.btn.btn-info.col-sm-1(type='submit')
+            i.fa.fa-sign-out
+      img#logo(src='/images/Eventclick.png', alt='EventClick')
+      h3 Lista de eventos
+      .input-group
+        span.input-group-addon Filtrar
+        input#filter.form-control(type='text', placeholder='Buscar...')
+      table.table.table-hover
+        thead
+          tr
+            th Título
+            th Subtítulo
+            th Finaliza
+            th Activo
+            th Ver
+        tbody.searchable
+            each eventClick in listaEventClick
+                form(role='form', method='POST' action='/show')
+                  tr
+                    input(type='hidden', name='idEvent', value='#{eventClick.idEvent}')
+                    td #{eventClick.title}
+                    td #{eventClick.subtitle}
+                    td #{eventClick.endDate}
+                    td
+                        if eventClick.isActive
+                            input#isActive(type='checkbox', disabled='true', checked)
+                        else
+                            input#isActive(type='checkbox', disabled='true')
+                    td
+                        button#add-show.btn.btn-info.btn-sm(type='submit', value='')
+                            i.fa.fa-eye
+      form(role='form', method='POST' action='/')
+        input#add-init.btn.btn-info.col-sm-2(type='submit', value="Inicio")
