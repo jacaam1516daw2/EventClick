@@ -2,6 +2,7 @@ extends layout
 
 block content
      .msg
+        img#logo(src='/images/Eventclick.png', alt='EventClick')
         h2 #{msg}
         form(role='form', method='POST' action='/')
             input#add-init.btn.btn-info.col-sm-2(type='submit', value="Inicio")

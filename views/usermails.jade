@@ -6,9 +6,9 @@ block content
             button#add-logout.btn.btn-info.col-sm-1(type='submit')
                 i.fa.fa-sign-out
           #userMailisPanel.row
-             h3 #{title}
-             p Gestión de usuarios
-             h2.col-sm-11 Lista de usuarios
+             img#logo(src='/images/Eventclick.png', alt='EventClick')
+             h1 Gestión de usuarios
+             h2.col-sm-11 Lista de usuarios a notificar
              button#add-user.btn.btn-info.col-sm-1(type='submit')
                 i.fa.fa-plus
           form(role='form', method='POST' action='/deleteUser')

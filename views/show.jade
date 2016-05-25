@@ -5,7 +5,7 @@ block content
         .row
             .col-sm-6
               #showPanel.row
-                 h3 #{title}
+                    img#logo(src='/images/Eventclick.png', alt='EventClick')
                   .form-group
                     h1 #{eventClick.title}
                   .form-group
@@ -33,7 +33,7 @@ block content
                         input#add-init.btn.btn-info(type='submit', value="Desinscribirse")
 
                 form(role='form', method='POST' action='/')
-                    input#add-init.btn.btn-info(type='submit', value="Cancelar")
+                    input#add-init.btn.btn-info(type='submit', value="Inicio")
                 if accessUser.isAdmin == "true"
                   form(role='form', method='POST' action='/edit')
                     input(type='hidden', name='idEvent', value='#{eventClick.idEvent}')

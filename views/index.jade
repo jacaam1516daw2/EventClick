@@ -6,8 +6,11 @@ block content
         form(role='form', method='POST' action='/logout')
             button#add-logout.btn.btn-info.col-sm-1(type='submit')
                 i.fa.fa-sign-out
-        h1 Bienvenido a #{title}
-        p Crea y gestiona tus eventos
+        .row
+            .col-sm-6
+                img#initLogo(src='/images/Eventclick.png', alt='EventClick')
+            .col-sm-6
+                h2 Crea y gestiona tus eventos
         form(role='form', method='POST' action='/allevents')
             button#add-allevents.btn.btn-info(type='submit') Ver eventos
         if accessUser.isAdmin == "true"

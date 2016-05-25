@@ -1,3 +1,18 @@
+#initLogo {
+    width: 70%;
+    height: 100%;
+    margin-bottom: 10px;
+}
+#logo {
+    width: 50%;
+    height: 100%;
+    margin: 10px;
+}
+#loginlogo {
+    width: 95%;
+    height: 100%;
+    margin: 10px;
+}
 #editionPanel {
     padding: 5px;
     border-radius: 10px;
@@ -60,7 +75,9 @@ input[type=submit] {
 #add-logout {
     width: 40px;
     top: 25px;
-    float: right;
+    position: fixed;
+    top: 5px;
+    right: 5px;
 }
 #add-new,
 #add-allevents,
