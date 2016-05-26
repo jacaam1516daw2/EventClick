@@ -20,6 +20,8 @@ var listaUserSign = [];
 var users = [];
 var toMail;
 
+
+
 /*
  * INICIO ACCIONES DE ENRUTAMIENTO
  */
@@ -443,7 +445,7 @@ router.post('/deleteUser', function (req, res) {
     } else {
         for (i in listMails) {
             request({
-                url: 'http://localhost:8080/api/users/' + listMails[i], //URL to hit
+                url: 'http://localhost:8080/api/users/' + listMails[i].trim(), //URL to hit
                 method: 'DELETE'
             }, function (error, response, body) {
                 if (error) {
@@ -804,7 +806,8 @@ function handleSayEmail(req, res) {
         }
     }));
 
-    var text = "<div><h1>" + eventClick.title + "</h1></div>" +
+    var text = "<img src='http://i.imgur.com/mOko6Kh.png' width=350px/><br><div><h1>" + eventClick.title +
+        "</h1></div>" +
         "<div><h3>" + eventClick.subtitle + "</h3></div>" +
         "<div><label>Del:" + eventClick.initDate + "Al:" + eventClick.endDate + "</label></div>" +
         "<div><img src=" + eventClick.url + " width=250px height=200px></div>" +
@@ -875,7 +878,7 @@ function InsertUserEmail(req, res) {
         listaEventClick = [];
         topEvents(db, err, function () {});
     });
-    var text = "<div class='container'> <h2>EvenClick</h2> <p>Bienvenido a EventClick</p> <p>Correo de confirmación de" + "EventClick</p> <h3>Estos son los últimos eventos creados</h3> <table style='width: 100%;background-color: #eee;color:" + "#ffffff;text-align:center'> <tr style='background-color: #000'> <th>Título</th> <th>Subtítulo</th> <th>Finaliza</th> </tr>"
+    var text = "<div class='container'><img src='http://i.imgur.com/mOko6Kh.png' width=350px/><h2>EvenClick</h2> <p>Bienvenido a EventClick</p> <p>Correo de confirmación de" + "EventClick</p> <h3>Estos son los últimos eventos creados</h3> <table style='width: 100%;background-color: #eee;color:" + "#ffffff;text-align:center'> <tr style='background-color: #000'> <th>Título</th> <th>Subtítulo</th> <th>Finaliza</th></tr>"
     for (i in listaEventClick) {
         text = text + "<tr style='color: #000;border: 1px solid black;border-collapse: collapse;'>" +
             listaEventClick[i].title + "</td><td>" + listaEventClick[i].subtitle + "</td><td>" +
