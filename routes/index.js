@@ -255,7 +255,6 @@ router.post('/update', function (req, res) {
     eventClick.subtitle = req.body.subtitleForm;
     eventClick.description = req.body.descriptionForm;
     eventClick.url = req.body.urlForm;
-    //eventClick.author = req.body.author;
     eventClick.isActive = req.body.isActiveForm;
     eventClick.initDate = req.body.initDateForm;
     eventClick.endDate = req.body.endDateForm;
