@@ -20,8 +20,6 @@ var listaUserSign = [];
 var users = [];
 var toMail;
 
-
-
 /*
  * INICIO ACCIONES DE ENRUTAMIENTO
  */
@@ -596,7 +594,6 @@ var saveEvents = function (db, err, callback) {
         "subtitle": eventClick.subtitle,
         "description": eventClick.description,
         "url": eventClick.url,
-        //"author": author,
         "isActive": eventClick.isActive,
         "initDate": eventClick.initDate,
         "endDate": eventClick.endDate
@@ -658,7 +655,6 @@ var eventsById = function (db, err, callback) {
             eventClick.subtitle = doc.subtitle;
             eventClick.description = doc.description;
             eventClick.url = doc.url;
-            //eventClick.author = doc.author;
             eventClick.isActive = doc.isActive;
             eventClick.initDate = doc.initDate;
             eventClick.endDate = doc.endDate;
@@ -685,7 +681,6 @@ var activeEvents = function (db, err, callback) {
             eventClick.subtitle = doc.subtitle;
             eventClick.description = doc.description;
             eventClick.url = doc.url;
-            //eventClick.author = doc.author;
             eventClick.isActive = doc.isActive;
             eventClick.initDate = doc.initDate;
             eventClick.endDate = doc.endDate;
@@ -714,7 +709,6 @@ var inactiveEvents = function (db, err, callback) {
             eventClick.subtitle = doc.subtitle;
             eventClick.description = doc.description;
             eventClick.url = doc.url;
-            //eventClick.author = doc.author;
             eventClick.isActive = doc.isActive;
             eventClick.initDate = doc.initDate;
             eventClick.endDate = doc.endDate;
@@ -743,7 +737,6 @@ var allEvents = function (db, err, callback) {
             eventClick.subtitle = doc.subtitle;
             eventClick.description = doc.description;
             eventClick.url = doc.url;
-            //eventClick.author = doc.author;
             eventClick.isActive = doc.isActive;
             eventClick.initDate = doc.initDate;
             eventClick.endDate = doc.endDate;
@@ -774,7 +767,6 @@ var topEvents = function (db, err, callback) {
             eventClick.subtitle = doc.subtitle;
             eventClick.description = doc.description;
             eventClick.url = doc.url;
-            //eventClick.author = doc.author;
             eventClick.isActive = doc.isActive;
             eventClick.initDate = doc.initDate;
             eventClick.endDate = doc.endDate;
@@ -878,7 +870,7 @@ function InsertUserEmail(req, res) {
         listaEventClick = [];
         topEvents(db, err, function () {});
     });
-    var text = "<div class='container'><img src='http://i.imgur.com/mOko6Kh.png' width=350px/><h2>EvenClick</h2> <p>Bienvenido a EventClick</p> <p>Correo de confirmación de" + "EventClick</p> <h3>Estos son los últimos eventos creados</h3> <table style='width: 100%;background-color: #eee;color:" + "#ffffff;text-align:center'> <tr style='background-color: #000'> <th>Título</th> <th>Subtítulo</th> <th>Finaliza</th></tr>"
+    var text = "<div class='container'><img src='http://i.imgur.com/mOko6Kh.png' width=350px/><p>Bienvenido a EventClick</p> <p>Correo de confirmación de" + "EventClick</p> <h3>Estos son los últimos eventos creados</h3> <table style='width: 100%;background-color: #eee;color:" + "#ffffff;text-align:center'> <tr style='background-color: #000'> <th>Título</th> <th>Subtítulo</th> <th>Finaliza</th></tr>"
     for (i in listaEventClick) {
         text = text + "<tr style='color: #000;border: 1px solid black;border-collapse: collapse;'>" +
             listaEventClick[i].title + "</td><td>" + listaEventClick[i].subtitle + "</td><td>" +
