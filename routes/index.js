@@ -826,7 +826,7 @@ function handleSayEmail(req, res) {
     var text = "<img src='http://i.imgur.com/mOko6Kh.png' width=350px/><br><div><h1>" + eventClick.title +
         "</h1></div>" +
         "<div><h3>" + eventClick.subtitle + "</h3></div>" +
-        "<div><label>Del:" + eventClick.initDate + "Al:" + eventClick.endDate + "</label></div>" +
+        "<div><label><b>Del: " + eventClick.initDate + " Al: " + eventClick.endDate + "</b></label></div><br>" +
         "<div><img src=" + eventClick.url + " width=250px height=200px></div>" +
         "<div><h3>" + eventClick.description + "</h3></div>";
 
@@ -906,7 +906,7 @@ function InsertUserEmail(req, res) {
         listaEventClick = [];
         topEvents(db, err, function () {});
     });
-    var text = "<div class='container'><img src='http://i.imgur.com/mOko6Kh.png' width=350px/><p>Bienvenido a EventClick</p> <p>Correo de confirmación de" + "EventClick</p> <h3>Estos son los últimos eventos creados</h3> <table style='width: 100%;background-color: #eee;color:" + "#ffffff;text-align:center'> <tr style='background-color: #000'> <th>Título</th> <th>Subtítulo</th> <th>Finaliza</th></tr>"
+    var text = "<div class='container'><img src='http://i.imgur.com/mOko6Kh.png' width=350px/><p>Bienvenido a EventClick</p> <p>Correo de confirmación de EventClick</p> <h3>Estos son los últimos eventos creados</h3> <table style='width: 100%;background-color: #eee;color:" + "#ffffff;text-align:center'> <tr style='background-color: #000'> <th>Título</th> <th>Subtítulo</th> <th>Finaliza</th></tr>"
     for (i in listaEventClick) {
         text = text + "<tr style='color: #000;border: 1px solid black;border-collapse: collapse;'>" +
             listaEventClick[i].title + "</td><td>" + listaEventClick[i].subtitle + "</td><td>" +
