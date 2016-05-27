@@ -19,6 +19,7 @@ var listaEventClick = [];
 var listaUserSign = [];
 var users = [];
 var toMail;
+var isUserSign = false;
 
 /*
  * INICIO ACCIONES DE ENRUTAMIENTO
@@ -292,6 +293,8 @@ router.post('/signme', function (req, res, next) {
         assert.equal(null, err);
         console.log("Connexió correcta");
         userSignme(db, err, function () {
+            isUserSign = true;
+            handleSayEmail(req, res);
             inscriptionUsers(db, err, function () {
                 res.render('show', {
                     title: 'EventClick',
@@ -806,8 +809,14 @@ function handleSayEmail(req, res) {
         "<div><h3>" + eventClick.description + "</h3></div>";
 
     var toMail = '';
-
     var listMails = req.body.isSend;
+
+
+    if (listMails == '' || listMails === undefined) {
+        if (isUserSign) {
+            listMails = userSign.email;
+        }
+    }
 
     if (typeof listMails === 'string') {
         toMail = listMails;
@@ -841,10 +850,14 @@ function handleSayEmail(req, res) {
                     msg: 'Error en el envío, vuelva a intentarlo de nuevo'
                 });
             } else {
-                res.render('sendmail', {
-                    title: 'EventClick',
-                    msg: 'Envío de notificación correcta'
-                });
+                if (!isUserSign) {
+                    res.render('sendmail', {
+                        title: 'EventClick',
+                        msg: 'Envío de notificación correcta'
+                    });
+                } else {
+                    isUserSign = false;
+                }
             };
         });
     }
