@@ -1,15 +1,15 @@
- $(function () {
-     /**
-      * Datepicker calendario
-      */
-     $(".date").datepicker({
-         dateFormat: 'dd/mm/yy'
-     });
+ $(document).ready(function () {
+     $(function () {
+         /**
+          * Datepicker calendario
+          */
+         $(".date").datepicker({
+             dateFormat: 'dd/mm/yy'
+         });
 
-     /**
-      * Filtro para tablas
-      */
-     $(document).ready(function () {
+         /**
+          * Filtro para tablas
+          */
          (function ($) {
              $('#filter').keyup(function () {
                  var rex = new RegExp($(this).val(), 'i');
@@ -19,8 +19,15 @@
                  }).show();
              })
          }(jQuery));
+
+
+
+         /**
+          * Animación añadir usuarios de notificación
+          */
          $('#addUserPanel').hide();
          $('#userMailis').show();
+
          $('#add-user').click(function () {
              $('#addUserPanel').fadeIn("slow", function () {});
              $('#userMailis').fadeOut("slow", function () {});
@@ -29,6 +36,10 @@
              $('#userMailis').fadeIn("slow", function () {});
              $('#addUserPanel').fadeOut("slow", function () {});
          });
+
+         /**
+          * Validaciones de formularios
+          */
          $('#error').hide();
          $('#add-register').prop('disabled', true);
 
@@ -39,6 +50,7 @@
                  $('#add-register').prop('disabled', true);
              }
          });
+
          $("#emailClick").keyup(function () {
              if ($('#password').val() != '' && $('#confirm').val() != '' && $('#nameClick').val() != '' && $('#emailClick').val() != '') {
                  $('#add-register').prop('disabled', false);
@@ -46,6 +58,7 @@
                  $('#add-register').prop('disabled', true);
              }
          });
+
          $("#confirm").keyup(function () {
              if ($('#password').val() === $('#confirm').val()) {
                  if ($('#password').val() != '' && $('#confirm').val() != '' && $('#nameClick').val() != '' && $('#emailClick').val() != '') {

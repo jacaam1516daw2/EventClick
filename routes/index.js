@@ -25,6 +25,9 @@ var isUserSign = false;
  * INICIO ACCIONES DE ENRUTAMIENTO
  */
 
+/*
+ * Pantalla principal
+ */
 router.get('/', function (req, res, next) {
     if (accessUser.id == '' || accessUser.id === undefined) {
         res.render('login', {
@@ -49,6 +52,8 @@ router.get('/', function (req, res, next) {
 
 /*
  * Redirección Botones de Inicio
+ * Necesario el post para los botones de redirección a
+ * la pantalla de inicio para las distintas pantallas
  */
 router.post('/', function (req, res, next) {
     if (accessUser.id == '' || accessUser.id === undefined) {
@@ -109,6 +114,8 @@ router.post('/login', function (req, res, next) {
 
 /*
  * Registro de usuarios
+ * En la pantalla de registro al registrarnos llamamos aquí
+ * para que nos inserte el usario en la base de datos
  */
 router.post('/insertUserClick', function (req, res) {
     console.log('insertUserClick');
@@ -136,7 +143,7 @@ router.post('/insertUserClick', function (req, res) {
 });
 
 /*
- * Redirección de Inicio a la pantalla de Altas
+ * Redirección de la pantalla de Login a la pantalla de registro
  */
 router.post('/register', function (req, res) {
     console.log('register');
@@ -146,7 +153,7 @@ router.post('/register', function (req, res) {
 });
 
 /*
- * Redirección Botones de Inicio
+ * Redirección a la pantalla donde se listan todos los eventos
  */
 router.post('/allevents', function (req, res, next) {
     MongoClient.connect(url, function (err, db) {
@@ -164,7 +171,7 @@ router.post('/allevents', function (req, res, next) {
 });
 
 /*
- * Redirección de Inicio a la pantalla de Altas
+ * Redirección de Inicio a la pantalla de Altas de eventos
  */
 router.post('/alta', function (req, res) {
     console.log('alta');
@@ -174,7 +181,7 @@ router.post('/alta', function (req, res) {
 });
 
 /*
- * Eliminación de un evento
+ * Desde la pantalla de alta eventos: Eliminación de un evento
  */
 router.post('/delete', function (req, res) {
     console.log('delete');
@@ -192,7 +199,8 @@ router.post('/delete', function (req, res) {
 });
 
 /*
- * Al guardar el alta nueva guardamos los datos i redireccionamos a la pantalla de Inicio
+ * Desde la pantalla de alta eventos: Insertar evento.
+ * Al guardar el nuevo evento, guardamos los datos i redireccionamos a la pantalla de Inicio
  */
 router.post('/insert', function (req, res) {
     console.log('insert');
@@ -201,7 +209,6 @@ router.post('/insert', function (req, res) {
     eventClick.subtitle = req.body.subtitleForm;
     eventClick.description = req.body.descriptionForm;
     eventClick.url = req.body.urlForm;
-    //eventClick.author = req.body.author;
     eventClick.isActive = req.body.isActiveForm;
     eventClick.initDate = req.body.initDateForm;
     eventClick.endDate = req.body.endDateForm;
@@ -237,7 +244,8 @@ router.post('/edit', function (req, res) {
 });
 
 /*
- * Al modificar los datos guardamos los datos y redireccionamos a la pantalla de Inicio
+ * Desde la pantalla de edición, al modificar los datos
+ * guardamos los datos y redireccionamos a la pantalla de Inicio
  */
 router.post('/update', function (req, res) {
     console.log('update');
@@ -261,24 +269,9 @@ router.post('/update', function (req, res) {
     });
 });
 
-/**
- * Envío de mail de notificación de eventos
- */
-router.post('/sendmail', function (req, res) {
-    console.log("sendmail");
-    eventClick = new Object();
-    eventClick.idEvent = req.body.idEvent;
-    MongoClient.connect(url, function (err, db) {
-        assert.equal(null, err);
-        console.log("Connexió correcta");
-        eventsById(db, err, function () {
-            handleSayEmail(req, res);
-        });
-    });
-});
-
 /*
- * Inscribirse al evento
+ * Desde la pantalla show, Nos inscribimos al evento
+ * Enviamos un email del evento al usuario que se acaba de apuntar al evento
  */
 router.post('/signme', function (req, res, next) {
     console.log('signme');
@@ -310,7 +303,8 @@ router.post('/signme', function (req, res, next) {
 });
 
 /*
- * DesInscribirse al evento
+ * Desde la pantalla show, botón de borrarse del evento
+ * Accedemos a la BD para borrarlo del evento
  */
 router.post('/unsignme', function (req, res, next) {
     console.log('unsignme');
@@ -323,6 +317,7 @@ router.post('/unsignme', function (req, res, next) {
         assert.equal(null, err);
         console.log("Connexió correcta");
         userUnSignme(db, err, function () {
+            //Miramos si el usuario que esta navegando esta inscrito al evento que consulta
             inscriptionUsers(db, err, function () {
                 res.render('show', {
                     title: 'EventClick',
@@ -338,13 +333,17 @@ router.post('/unsignme', function (req, res, next) {
 });
 
 /*
- * Visualización de evento y busqueda por id
+ * Pantalla show Visualización de evento y busqueda por id
+ * Se hace una llamada a la API Rest para recuperar los usuarios
+ * que se deben notificar un evento.
  */
 router.post('/show', function (req, res) {
     console.log("show");
     //LLAMADA a la API para recuperar las cuentas de mail
     var request = require('request');
     users = [];
+
+    // Llamada a la API Rest para recuperar una lista de usuarios
     request('http://localhost:8080/api/users', function (error, response, body) {
         if (!error && response.statusCode == 200) {
             var listUsers = JSON.parse(body);
@@ -368,6 +367,7 @@ router.post('/show', function (req, res) {
         console.log("Connexió correcta");
 
         eventsById(db, err, function () {
+            //Miramos si el usuario que esta navegando esta inscrito al evento que consulta
             inscriptionUsers(db, err, function () {
                 var msg = '';
                 for (i in listaUserSign) {
@@ -387,6 +387,22 @@ router.post('/show', function (req, res) {
                     msg: msg
                 });
             });
+        });
+    });
+});
+
+/**
+ * Desde la pantalla show, Botón de envío de mail de notificación de eventos
+ */
+router.post('/sendmail', function (req, res) {
+    console.log("sendmail");
+    eventClick = new Object();
+    eventClick.idEvent = req.body.idEvent;
+    MongoClient.connect(url, function (err, db) {
+        assert.equal(null, err);
+        console.log("Connexió correcta");
+        eventsById(db, err, function () {
+            handleSayEmail(req, res);
         });
     });
 });
@@ -425,7 +441,8 @@ router.get('/usermails', function (req, res) {
 });
 
 /**
- * Eliminar usuarios para notificar eventos llamando a la API
+ * Desde la pantalla usermails, eliminar usuario o usuarios para notificar eventos
+ * Se hace una llamada a la API Rest de tipo DELETE
  */
 router.post('/deleteUser', function (req, res) {
     console.log("deleteUser: " + req.body.isSend);
@@ -461,7 +478,8 @@ router.post('/deleteUser', function (req, res) {
 });
 
 /**
- * Añadir usuario para notificar eventos llamando a la API
+ * Desde la pantalla usermails, añadir un usuario para notificar eventos
+ * Llamando a la API Rest con un POST, se le envia un usuario mediante un objeto JSON
  */
 router.post('/altaUser', function (req, res) {
     console.log("altaUser");
@@ -497,7 +515,7 @@ router.post('/altaUser', function (req, res) {
  */
 
 /**
- * Busqueda evento por ID
+ * Busqueda del usuario que esta haciendo login para comprobar que esta registrado
  */
 var loginAccess = function (db, err, callback) {
     console.log("loginAccess");
@@ -521,7 +539,7 @@ var loginAccess = function (db, err, callback) {
 };
 
 /**
- * Insertar usuario nuevo
+ * Registro de un usuario de la aplicacción EventClick
  */
 var insertUserClick = function (db, err, callback) {
     db.collection('usersClick').insertOne({
@@ -536,7 +554,7 @@ var insertUserClick = function (db, err, callback) {
 };
 
 /**
- * Inscribir usuario
+ * Inscribir usuario a un evento
  */
 var userSignme = function (db, err, callback) {
     db.collection('userSignme').insertOne({
@@ -551,7 +569,7 @@ var userSignme = function (db, err, callback) {
 };
 
 /**
- * Desinscribir usuario
+ * Borrar usuario de un evento
  */
 var userUnSignme = function (db, err, callback) {
     console.log("userunSignme");
@@ -565,7 +583,7 @@ var userUnSignme = function (db, err, callback) {
 };
 
 /**
- * Lista usuarios inscritos
+ * Consulta de la Lista usuarios inscritos a un evento
  */
 var inscriptionUsers = function (db, err, callback) {
     var cursor = db.collection('userSignme').find({
@@ -607,7 +625,7 @@ var saveEvents = function (db, err, callback) {
 };
 
 /**
- * Modificación evento (guardamos por id)
+ * Eliminación de un evento
  */
 var deleteEvents = function (db, err, callback) {
     console.log("deleteEvents");
@@ -621,7 +639,7 @@ var deleteEvents = function (db, err, callback) {
 };
 
 /**
- * Modificación evento (guardamos por id)
+ * Modificación de un evento
  */
 var editEvents = function (db, err, callback) {
     db.collection('events').updateOne({
@@ -643,7 +661,7 @@ var editEvents = function (db, err, callback) {
 };
 
 /**
- * Busqueda evento por ID
+ * Busqueda de un evento por ID
  */
 var eventsById = function (db, err, callback) {
     console.log("eventsById");
@@ -669,7 +687,7 @@ var eventsById = function (db, err, callback) {
 };
 
 /**
- * Busqueda evento activados
+ * Busqueda de los evento activos
  */
 var activeEvents = function (db, err, callback) {
     var cursor = db.collection('events').find({
@@ -697,7 +715,7 @@ var activeEvents = function (db, err, callback) {
 };
 
 /**
- * Busqueda evento desactivados
+ * Busqueda de los eventos desactivados
  */
 var inactiveEvents = function (db, err, callback) {
     var cursor = db.collection('events').find({
@@ -725,7 +743,7 @@ var inactiveEvents = function (db, err, callback) {
 };
 
 /**
- * Busqueda evento pantalla de inicio (Solo los activos)
+ * Lista de todos los eventos existentes
  */
 var allEvents = function (db, err, callback) {
     var cursor = db.collection('events').find().sort({
@@ -753,7 +771,8 @@ var allEvents = function (db, err, callback) {
 };
 
 /**
- * Busqueda evento pantalla de inicio (Solo los activos) 6 ultimos
+ * TOP Busqueda de los eventos de la pantalla de inicio
+ * (Solo los activos) y los 6 ultimos eventos creados
  */
 var topEvents = function (db, err, callback) {
     var cursor = db.collection('events').find({
@@ -783,13 +802,17 @@ var topEvents = function (db, err, callback) {
 };
 
 /**
- * INICIO LLAMADAS A MONGO ACTIONS
+ * FIN LLAMADAS A MONGO ACTIONS
  */
 
 /**
- * ENVIO EMAIL de Evento
+ * NODEMAILER - INICIO ENVIO EMAIL de Eventos
  */
 
+/**
+ * Envío de email de un solo evento
+ * Al inscrivirse a un evento o alnotificar a los diferentes usuarios
+ */
 function handleSayEmail(req, res) {
     // Not the movie transporter!
     console.log("handleSayEmail");
@@ -864,7 +887,8 @@ function handleSayEmail(req, res) {
 };
 
 /**
- * ENVIO EMAIL de Alta usuario
+ * Registrarse en EventClick se envía un email de los últimos
+ * eventos creados
  */
 function InsertUserEmail(req, res) {
     // Not the movie transporter!
